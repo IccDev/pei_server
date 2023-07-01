@@ -1,0 +1,26 @@
+[package]
+name = "icc_common"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net"]}
+tracing = "0.1.26"
+tracing-subscriber = "0.3.1"
+hyper = {version = "0.14", features = ["server", "tcp", "http1", "http2"]}
+futures = "0.3"
+match_request = "0.1"
+multipart = "0.18"
+mime = "0.3"
+uuid = { version = "1.3", features = ["v4", "serde", "macro-diagnostics"] }
+remoc = { version = "0.10", features = ["rch"] }
+acteur = "0.12"
+mailchecker = "5.0"
+zxcvbn = "2.2"
+chbs = "0.1"
+rust-argon2 = "1.0"
+sqlx = { version = "0.6", features = ["postgres", "runtime-async-std-rustls", "time"]}
+async-trait = "0.1"
+time =  {version = "0.3", features = ["serde-human-readable"]}

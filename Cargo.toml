@@ -1,0 +1,28 @@
+[package]
+name = "pei_server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "icc_gateway"
+path = "icc_gateway/src/main.rs"
+
+[[bin]]
+name = "icc_users"
+path = "icc_users/src/main.rs"
+
+
+[workspace]
+members = [
+    "icc_gateway",
+    "icc_users",
+    "icc_common",
+    "inter_services_messages",
+
+    #"/usr/src/pei_server/icc_gateway",
+    #"/usr/src/pei_server/icc_users",
+    #"/usr/src/pei_server/icc_common",
+    #"/usr/src/pei_server/inter_services_messages",
+]

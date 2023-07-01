@@ -1,0 +1,58 @@
+version: "3.9"
+name: pei
+services:
+  icc_gateway:
+    build: ./
+    image: icc/icc_gateway:v_0.1.0
+    container_name: icc_gateway
+    networks:
+      icc_net:
+        ipv4_address: 192.168.10.10
+    ports:
+      - "192.168.1.3:40010:4010"
+    environment:
+      - Address=192.168.10.10:4010
+      - UserClient=192.168.10.11:4011
+    depends_on:
+      - icc_db
+
+  icc_users:
+    build: ./
+    image: icc/icc_users:v_0.1.0
+    container_name: icc_users
+    networks:
+      icc_net:
+        ipv4_address: 192.168.10.11
+    ports:
+      - "192.168.1.3:40011:4011"
+    environment:
+      - Address=192.168.10.11:4011
+      - AnonymousToken=mfjlsdjflsjflqjsldjflqjsljdf,
+      - DatabaseAddress=postgres://icc_admin:icc_admin@2023@192.168.10.5:5432/postgres
+    depends_on:
+      - icc_db
+    
+  icc_db:
+      image: postgres:alpine3.18
+      container_name: icc_db
+      restart: always
+      ports:
+      - 8091:5432
+      networks:
+        icc_net:
+          ipv4_address: 192.168.10.5
+      environment:
+        POSTGRES_PASSWORD: icc_admin_2023
+        POSTGRES_USER: icc_admin
+      volumes:
+        - postgresVolume:/var/lib/postgresql/data
+
+networks:
+  icc_net:
+    ipam:
+      driver: default
+      config:
+        - 
+          subnet: "192.168.10.0/24"
+volumes:
+  postgresVolume:
