@@ -1,5 +1,4 @@
 mod router;
-mod services;
 mod clients;
 
 use std::env;
@@ -30,7 +29,7 @@ async fn main() {
 
     let address = match env::var("Address") {
         Ok(a) => a,
-        Err(_) => String::from("192.168.1.3:4010")
+        Err(_) => String::from("192.168.1.5:4010")
     };
 
     info!("Server: http://{}", address);

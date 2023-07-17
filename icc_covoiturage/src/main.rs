@@ -8,9 +8,9 @@ use icc_common::{
     remoc::{self, rch},
     acteur::Acteur
 };
-use inter_services_messages::{Message, MessageData, UserMessageData};
+use inter_services_messages::{Message, MessageData, CovoiturageMessageData};
 use services::{
-    users,
+    covoiturage,
     database::DatabaseService
 };
 
@@ -23,7 +23,7 @@ async fn main() {
 
     let address = match env::var("Address") {
         Ok(a) => a,
-        Err(_) => String::from("192.168.1.5:4011")
+        Err(_) => String::from("192.168.1.5:4012")
     };
 
     info!("Server: http://{}", address);
@@ -52,8 +52,8 @@ async fn main() {
 async fn server(mut rx: rch::base::Receiver<Message>, acteur: Acteur) {
     while let Some(req) = rx.recv().await.unwrap() {
         match req.data {
-            MessageData::User(UserMessageData::RegisterUser(user)) => {
-                match users::create_user(user, acteur.clone()).await {
+            MessageData::Covoiturage(CovoiturageMessageData::CreateBillet(billet)) => {
+                match covoiturage::create_billet(billet, acteur.clone()).await {
                     Ok(r) => {
                         req.sender.send(Ok(r)).unwrap();
                     },
@@ -62,28 +62,18 @@ async fn server(mut rx: rch::base::Receiver<Message>, acteur: Acteur) {
                     }
                 } 
             },
-            MessageData::User(UserMessageData::ListUsers(user_token)) => {
-                match users::list_users(user_token, acteur.clone()).await {
+            MessageData::Covoiturage(CovoiturageMessageData::ListBillets(user)) => {
+                match covoiturage::list_billets(user, acteur.clone()).await {
                     Ok(r) => {
                         req.sender.send(Ok(r)).unwrap();
                     },
                     Err(e) => {
                         req.sender.send(Err(e)).unwrap();
                     }
-                }
-            },
-            MessageData::User(UserMessageData::LoginUser(login_form)) => {
-                match users::login_user(login_form, acteur.clone()).await {
-                    Ok(r) => {
-                        req.sender.send(Ok(r)).unwrap();
-                    },
-                    Err(e) => {
-                        req.sender.send(Err(e)).unwrap();
-                    }
-                }
+                } 
             },
             _ => {
-                req.sender.send(Err("error!".to_string())).unwrap();
+                req.sender.send(Err("error".to_string())).unwrap();
             }
         }
     }

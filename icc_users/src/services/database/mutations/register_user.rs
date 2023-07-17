@@ -9,7 +9,7 @@ use icc_common::{
     sqlx,
     time::OffsetDateTime
 };
-use inter_services_messages::{User, ResponseData};
+use inter_services_messages::{users::User, ResponseData, UserResponseData};
 
 
 #[async_trait::async_trait]
@@ -60,7 +60,7 @@ impl DatabaseService {
             .execute(&self.pool)
             .await 
         {
-            Ok(_) => Ok(ResponseData::RegisterUser),
+            Ok(_) => Ok(ResponseData::User(UserResponseData::RegisterUser)),
             Err(_) => {
                 // need to check well before sending the error message back
                 Err("not able to register!".to_owned())

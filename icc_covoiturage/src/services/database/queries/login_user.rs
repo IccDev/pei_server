@@ -7,7 +7,7 @@ use icc_common::{
     acteur::{Serve, ServiceAssistant},
     async_trait
 };
-use inter_services_messages::{ResponseData, users::{LoginForm, User}};
+use inter_services_messages::{LoginForm, User, ResponseData};
 
 
 

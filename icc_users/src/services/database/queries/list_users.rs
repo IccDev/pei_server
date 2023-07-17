@@ -8,7 +8,7 @@ use icc_common::{
     async_trait,
     sqlx
 };
-use inter_services_messages::{User, ResponseData};
+use inter_services_messages::{users::User, ResponseData, UserResponseData};
 
 #[derive(Debug, Clone)]
 pub struct ListUsersMsg;
@@ -31,7 +31,7 @@ impl DatabaseService {
             .fetch_all(&self.pool)
             .await 
         {
-            Ok(res) => Ok(ResponseData::ListUsers(res)),
+            Ok(res) => Ok(ResponseData::User(UserResponseData::ListUsers(res))),
             Err(_) => {
                 // need to check well before sending the error message back
                 Err("not able to register!".to_owned())

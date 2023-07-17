@@ -13,6 +13,10 @@ path = "icc_gateway/src/main.rs"
 name = "icc_users"
 path = "icc_users/src/main.rs"
 
+[[bin]]
+name = "icc_covoiturage"
+path = "icc_covoiturage/src/main.rs"
+
 
 [workspace]
 members = [
@@ -20,6 +24,7 @@ members = [
     "icc_users",
     "icc_common",
     "inter_services_messages",
+    "icc_covoiturage",
 
     #"/usr/src/pei_server/icc_gateway",
     #"/usr/src/pei_server/icc_users",

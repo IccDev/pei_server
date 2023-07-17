@@ -1,5 +1,7 @@
 mod user_routes;
-mod unknowned;
+pub(crate) mod unknowned;
+pub(crate) mod response;
+pub(crate) mod co_voiturage_routes;
 
 
 use icc_common::{
@@ -10,7 +12,8 @@ use icc_common::{
 };
 use self::{
     unknowned::unknowed_route,
-    user_routes::user_handler
+    user_routes::user_handler,
+    co_voiturage_routes::handle_co_voiturage
 };
 
 // A boxed type definition for your async views.
@@ -41,15 +44,15 @@ macro_rules! route_handler {
 pub async fn router(req: Request<Body>) -> Result<Response<Body>, Error> {
     let method = req.method();
     let path = req.uri().path();
-    
+
     let (handler, params) = match_request!(method, path, {
         "/annonces/*" => {
             POST => crate::route_handler!(unknowed_route), 
             GET => crate::route_handler!(unknowed_route), 
         },
-        "/covoiturage/*" => {
-            POST => crate::route_handler!(unknowed_route), 
-            GET => crate::route_handler!(unknowed_route), 
+        "/co-voiturage/*" => {
+            POST => crate::route_handler!(handle_co_voiturage), 
+            GET => crate::route_handler!(handle_co_voiturage), 
         },
         "/departement/*" => {
             POST => crate::route_handler!(unknowed_route),

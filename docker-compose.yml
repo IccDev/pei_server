@@ -9,7 +9,7 @@ services:
       icc_net:
         ipv4_address: 192.168.10.10
     ports:
-      - "192.168.1.3:40010:4010"
+      - "192.168.1.5:40010:4010"
     environment:
       - Address=192.168.10.10:4010
       - UserClient=192.168.10.11:4011
@@ -24,10 +24,25 @@ services:
       icc_net:
         ipv4_address: 192.168.10.11
     ports:
-      - "192.168.1.3:40011:4011"
+      - "192.168.1.5:40011:4011"
     environment:
       - Address=192.168.10.11:4011
       - AnonymousToken=mfjlsdjflsjflqjsldjflqjsljdf,
+      - DatabaseAddress=postgres://icc_admin:icc_admin@2023@192.168.10.5:5432/postgres
+    depends_on:
+      - icc_db
+
+  icc_covoiturage:
+    build: ./
+    image: icc/icc_covoiturage:v_0.1.0
+    container_name: icc_covoiturage
+    networks:
+      icc_net:
+        ipv4_address: 192.168.10.12
+    ports:
+      - "192.168.1.5:40012:4012"
+    environment:
+      - Address=192.168.10.12:4012
       - DatabaseAddress=postgres://icc_admin:icc_admin@2023@192.168.10.5:5432/postgres
     depends_on:
       - icc_db

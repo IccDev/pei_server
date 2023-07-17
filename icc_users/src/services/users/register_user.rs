@@ -8,7 +8,7 @@ use icc_common::{
     time::OffsetDateTime
 };
 use std::env;
-use inter_services_messages::{RegisterUser, User, ResponseData};
+use inter_services_messages::{ResponseData, users::{RegisterUser, User}};
 use serde_json::json;
 use crate::services::database::{DatabaseService};
 

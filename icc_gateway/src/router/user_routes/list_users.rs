@@ -4,14 +4,14 @@ use icc_common::{
 };
 use serde_json::json;
 use crate::clients::user_client;
-use inter_services_messages::{MessageData, ResponseData};
+use inter_services_messages::{MessageData, ResponseData, UserResponseData, UserMessageData};
 
 
 
 pub(crate) async fn list_users(_req: Request<Body>, _params: Params) -> Response<Body> {
-    let data = MessageData::ListUsers(String::from("mfjlsdjflsjflqjsldjflqjsljdf"));
+    let data = MessageData::User(UserMessageData::ListUsers(String::from("mfjlsdjflsjflqjsldjflqjsljdf")));
     match user_client::client(data).await {
-        Ok(ResponseData::ListUsers(res)) => {
+        Ok(ResponseData::User(UserResponseData::ListUsers(res))) => {
             Response::builder()
                 .status(StatusCode::OK)
                 .header("content-type", "application/json")

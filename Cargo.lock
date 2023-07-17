@@ -1275,6 +1275,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "icc_covoiturage"
+version = "0.1.0"
+dependencies = [
+ "icc_common",
+ "inter_services_messages",
+ "serde",
+ "serde_derive",
+ "serde_json",
+]
+
+[[package]]
 name = "icc_gateway"
 version = "0.1.0"
 dependencies = [

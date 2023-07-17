@@ -8,9 +8,9 @@ use std::env;
 
 
 pub async fn client(msg: MessageData) -> Result<ResponseData, String> {
-    let address = match env::var("UserClient") {
+    let address = match env::var("CovoiturageClient") {
         Ok(a) => a,
-        Err(_) => String::from("192.168.1.5:4011")
+        Err(_) => String::from("192.168.1.5:4012")
     };
     // Establish TCP connection.
     let socket =

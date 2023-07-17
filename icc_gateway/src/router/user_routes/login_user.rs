@@ -2,13 +2,17 @@ use icc_common::{
     hyper::{Request, Response, Body, body::to_bytes, StatusCode},
     match_request::Params
 };
-use inter_services_messages::{MessageData, LoginForm, ResponseData};
+use inter_services_messages::{MessageData, users::LoginForm, ResponseData};
 use serde_json::json;
-use crate::clients::user_client;
+use crate::{
+    clients::user_client,
+    router::response::ok
+};
 
 
 pub(crate) async fn login_user(req: Request<Body>, _params: Params) -> Response<Body> {
-    let Ok(bytes) = to_bytes(req.into_body()).await else {
+    ok(Body::from(json!({"data": "success"}).to_string()))
+    /*let Ok(bytes) = to_bytes(req.into_body()).await else {
         return Response::builder()
                 .status(StatusCode::BAD_REQUEST)
                 .header("content-type", "application/json")
@@ -51,16 +55,6 @@ pub(crate) async fn login_user(req: Request<Body>, _params: Params) -> Response<
                 .header("content-type", "application/json")
                 .body(Body::from(json!({"error": format!("{:#?}", err)}).to_string()))
                 .unwrap()
-        }
-    }
-
-    /*match user_client::login_user(login_form).await {
-        Some(jwt) => {
-            let msg = json!({"jwt": jwt}).to_string();
-            Ok(tide::Response::builder(200).body(msg).header("content-type", "application/json").build())
-        },
-        None => {
-            Ok(tide::Response::builder(401).header("content-type", "application/json").build())
         }
     }*/
 }

@@ -1,5 +1,5 @@
 use icc_common::acteur::Acteur;
-use inter_services_messages::{ResponseData, users::LoginForm};
+use inter_services_messages::{ResponseData, LoginForm};
 use crate::services::database::DatabaseService;
 
 
