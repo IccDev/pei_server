@@ -1,73 +1,95 @@
 version: "3.9"
 name: pei
 services:
-  icc_gateway:
-    build: ./
-    image: icc/icc_gateway:v_0.1.0
-    container_name: icc_gateway
+  kc_db:
+    container_name: kc_db
+    image: "postgres:15.4"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: keycloak
+      POSTGRES_HOST: kc_db
     networks:
       icc_net:
         ipv4_address: 192.168.10.10
     ports:
-      - "192.168.1.5:40010:4010"
-    environment:
-      - Address=192.168.10.10:4010
-      - UserClient=192.168.10.11:4011
-    depends_on:
-      - icc_db
+      - "5433:5432"
 
-  icc_users:
-    build: ./
-    image: icc/icc_users:v_0.1.0
-    container_name: icc_users
+  keycloak:
+    container_name: keycloak
+    build:
+      context: ./keycloak
+      args:
+        KEYCLOAK_VERSION: 22.0.0
+    command: ['start', '--optimized']
+    depends_on:
+      - "kc_db"
+    environment:
+      JAVA_OPTS_APPEND: -Dkeycloak.profile.feature.upload_scripts=enabled
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL: jdbc:postgresql://kc_db/keycloak
+      KC_HOSTNAME_ADMIN_URL: http://${PUBLIC_URL}:8180
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_HEALTH_ENABLED: 'true'
+      KC_HTTP_ENABLED: 'true'
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_METRICS_ENABLED: 'true'
+      KC_LOG: console
+      KC_HOSTNAME_URL: http://${PUBLIC_URL}:8180
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "8180:8080"
+      - "8787:8787" # debug port
     networks:
       icc_net:
-        ipv4_address: 192.168.10.11
-    ports:
-      - "192.168.1.5:40011:4011"
-    environment:
-      - Address=192.168.10.11:4011
-      - AnonymousToken=mfjlsdjflsjflqjsldjflqjsljdf,
-      - DatabaseAddress=postgres://icc_admin:icc_admin@2023@192.168.10.5:5432/postgres
-    depends_on:
-      - icc_db
-
-  icc_covoiturage:
-    build: ./
-    image: icc/icc_covoiturage:v_0.1.0
-    container_name: icc_covoiturage
-    networks:
-      icc_net:
-        ipv4_address: 192.168.10.12
-    ports:
-      - "192.168.1.5:40012:4012"
-    environment:
-      - Address=192.168.10.12:4012
-      - DatabaseAddress=postgres://icc_admin:icc_admin@2023@192.168.10.5:5432/postgres
-    depends_on:
-      - icc_db
-    
-  icc_db:
-      image: postgres:alpine3.18
-      container_name: icc_db
-      restart: always
-      ports:
-      - 8091:5432
+        ipv4_address: 192.168.10.11   
+  
+  icc_gateway:
+      build: 
+        context: ./
+        target: gateway_runtime
+      image: icc/gateway:v_0.1.0
+      container_name: icc_gateway
       networks:
         icc_net:
-          ipv4_address: 192.168.10.5
+          ipv4_address: 192.168.10.12
+      ports:
+        - 4012:4012
       environment:
-        POSTGRES_PASSWORD: icc_admin_2023
-        POSTGRES_USER: icc_admin
-      volumes:
-        - postgresVolume:/var/lib/postgresql/data
+        - GatewayAddress=192.168.10.12:4012
+        - UserClientAddress=192.168.10.13:4013
+      depends_on:
+        - kc_db
+        - keycloak
 
+  icc_users:
+      build: 
+        context: ./
+        target: users_runtime
+      image: icc/users:v_0.1.0
+      container_name: icc_users
+      networks:
+        icc_net:
+          ipv4_address: 192.168.10.13
+      environment:
+        - UserClientAddress=192.168.10.13:4013
+        - KeycloakAddress=http://192.168.10.11:8080
+        - DatabaseAddress=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@192.168.10.10:5432/keycloak
+      depends_on:
+        - kc_db
+        - keycloak
+  
 networks:
   icc_net:
     ipam:
       driver: default
       config:
-        - 
-          subnet: "192.168.10.0/24"
+          - 
+            subnet: "192.168.10.0/24"
+
 volumes:
-  postgresVolume:
+  postgres_data:

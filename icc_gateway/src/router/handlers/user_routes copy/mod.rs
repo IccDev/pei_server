@@ -1,7 +1,9 @@
+/*
 mod register_user;
 pub mod user_data;
 mod list_users;
 mod login_user;
+*/
 
 use icc_common::{
     hyper::{Request, Response, Body},

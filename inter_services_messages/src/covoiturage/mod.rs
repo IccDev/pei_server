@@ -1,7 +1,7 @@
 use serde_derive::{Deserialize, Serialize};
 use icc_common::{
-    time::OffsetDateTime,
-    uuid::Uuid,
+    //time::OffsetDateTime,
+    //uuid::Uuid,
     sqlx::{FromRow, Row, postgres::PgRow, Result, Error}
 };
 

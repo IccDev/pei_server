@@ -23,7 +23,7 @@ impl Service for DatabaseService {
     async fn initialize(_system: &ServiceAssistant<Self>) -> (Self, ServiceConfiguration) {
         let address = match env::var("DatabaseAddress") {
             Ok(a) => a,
-            Err(_) => String::from("postgres://icc_admin:icc_admin_2023@192.168.1.5:8091/postgres")
+            Err(_) => String::from("postgres://icc_admin:icc_admin_2023@0.0.0.0:8091/postgres")
         };
         
         let service = DatabaseService {

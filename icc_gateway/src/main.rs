@@ -27,9 +27,9 @@ async fn main() {
     let subscriber = FmtSubscriber::new();
     set_global_default(subscriber).unwrap();
 
-    let address = match env::var("Address") {
+    let address = match env::var("GatewayAddress") {
         Ok(a) => a,
-        Err(_) => String::from("192.168.1.5:4010")
+        Err(_) => String::from("127.0.0.1:4012")
     };
 
     info!("Server: http://{}", address);

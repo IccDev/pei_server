@@ -1,6 +1,8 @@
-use icc_common::hyper::{Body, Response, StatusCode};
 use serde_json::json;
-
+use icc_common::{
+    match_request::Params,
+    hyper::{Request, Response, Body, StatusCode},
+};
 
 
 pub(crate) fn ok(body: Body) -> Response<Body> {
@@ -16,6 +18,15 @@ pub(crate) fn ok(body: Body) -> Response<Body> {
         .unwrap()
 }
 
+pub(crate) fn bad_request(msg: &str) -> Response<Body> {
+    Response::builder()
+                .status(StatusCode::BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Body::from(json!({"error": msg}).to_string()))
+                .unwrap()
+}
+
+/*
 pub(crate) fn ok_js(body: Body) -> Response<Body> {
     Response::builder()
         .status(StatusCode::OK)
@@ -41,7 +52,7 @@ pub(crate) fn ok_wasm(body: Body) -> Response<Body> {
         .body(body)
         .unwrap()
 }
-
+*/
 
 
 pub(crate) fn err(msg: &str) -> Response<Body> {
@@ -54,5 +65,13 @@ pub(crate) fn err(msg: &str) -> Response<Body> {
         .header("Access-Control-Allow-Headers", "*")
         .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         .body(Body::from(json!({"error": msg}).to_string()))
+        .unwrap()
+}
+
+pub(crate) async fn unknowed_route(_req: Request<Body>, _params: Params) -> Response<Body> {
+    Response::builder()
+        .status(StatusCode::NOT_FOUND)
+        .header("content-type", "application/json")
+        .body(Body::from(json!({"error": "Route Not Found!"}).to_string()))
         .unwrap()
 }

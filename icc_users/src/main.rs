@@ -11,7 +11,8 @@ use icc_common::{
 use inter_services_messages::{Message, MessageData, UserMessageData};
 use services::{
     users,
-    database::DatabaseService
+    KeycloakAPIService,
+    DatabaseService
 };
 
 #[tokio::main]
@@ -19,11 +20,12 @@ async fn main() {
     let subscriber = FmtSubscriber::new();
     set_global_default(subscriber).unwrap();
     let acteur = Acteur::new();
+    let _ = acteur.preload_service::<KeycloakAPIService>();
     let _ = acteur.preload_service::<DatabaseService>();
 
-    let address = match env::var("Address") {
+    let address = match env::var("UserClientAddress") {
         Ok(a) => a,
-        Err(_) => String::from("192.168.1.5:4011")
+        Err(_) => String::from("127.0.0.1:4013")
     };
 
     info!("Server: http://{}", address);
@@ -52,28 +54,8 @@ async fn main() {
 async fn server(mut rx: rch::base::Receiver<Message>, acteur: Acteur) {
     while let Some(req) = rx.recv().await.unwrap() {
         match req.data {
-            MessageData::User(UserMessageData::RegisterUser(user)) => {
-                match users::create_user(user, acteur.clone()).await {
-                    Ok(r) => {
-                        req.sender.send(Ok(r)).unwrap();
-                    },
-                    Err(e) => {
-                        req.sender.send(Err(e)).unwrap();
-                    }
-                } 
-            },
-            MessageData::User(UserMessageData::ListUsers(user_token)) => {
-                match users::list_users(user_token, acteur.clone()).await {
-                    Ok(r) => {
-                        req.sender.send(Ok(r)).unwrap();
-                    },
-                    Err(e) => {
-                        req.sender.send(Err(e)).unwrap();
-                    }
-                }
-            },
             MessageData::User(UserMessageData::LoginUser(login_form)) => {
-                match users::login_user(login_form, acteur.clone()).await {
+                match users::login(login_form, acteur.clone()).await {
                     Ok(r) => {
                         req.sender.send(Ok(r)).unwrap();
                     },
@@ -81,9 +63,16 @@ async fn server(mut rx: rch::base::Receiver<Message>, acteur: Acteur) {
                         req.sender.send(Err(e)).unwrap();
                     }
                 }
-            },
-            _ => {
-                req.sender.send(Err("error!".to_string())).unwrap();
+            }
+            MessageData::User(UserMessageData::Annuaire(search)) => {
+                match users::search_stars(search, acteur.clone()).await {
+                    Ok(r) => {
+                        req.sender.send(Ok(r)).unwrap();
+                    },
+                    Err(e) => {
+                        req.sender.send(Err(e)).unwrap();
+                    }
+                }
             }
         }
     }
