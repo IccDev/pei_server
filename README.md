@@ -7,7 +7,7 @@ cargo run -p icc_gateway
 cargo run -p icc_users
 
 ## docker
-sudo docker compose pull
+sudo docker compose pull djedou/icc_gateway:v_0.2.0
 sudo docker compose build
 docker compose up -d
 
@@ -17,5 +17,9 @@ docker compose build --no-cache keycloak
 ## docker push
 docker login
 
-docker push djedou/icc_gateway:tagname
-docker push djedou/icc_gateway:tagname
+docker push djedou/icc_gateway:v_0.2.0
+docker push djedou/icc_users:tagname
+
+## For https
+mkcert -key-file icc_ban_prod_key.pem -cert-file icc_ban_prod_cert.pem -client 57.128.169.26 192.168.10.12
+mkcert -key-file icc_ban_dev_key.pem -cert-file icc_ban_dev_cert.pem -client localhost 127.0.0.1 192.168.1.5 192.168.10.12

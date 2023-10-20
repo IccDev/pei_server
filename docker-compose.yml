@@ -52,7 +52,7 @@ services:
       build: 
         context: ./
         target: gateway_runtime
-      image: djedou/icc_gateway:v_0.1.0
+      image: djedou/icc_gateway:v_0.2.0
       container_name: icc_gateway
       networks:
         icc_net:

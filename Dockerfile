@@ -20,6 +20,7 @@ RUN mkdir -p /usr/src/pei_server/icc_users/src
 
 # We want dependencies cached, so copy those first.
 COPY Cargo.toml Cargo.lock /usr/src/pei_server/
+COPY icc_ban_cert.pem icc_ban_key.pem /usr/src/pei_server/
 
 COPY icc_common/Cargo.toml /usr/src/pei_server/icc_common/
 COPY icc_common/src /usr/src/pei_server/icc_common/src/
@@ -54,6 +55,8 @@ RUN cargo build -p icc_users --target x86_64-unknown-linux-musl --release
 FROM alpine:latest AS gateway_runtime 
 # Copy application binary from builder image
 COPY --from=builder /usr/src/pei_server/target/x86_64-unknown-linux-musl/release/icc_gateway /usr/local/bin
+COPY --from=builder /usr/src/pei_server/icc_ban_cert.pem /usr/local/bin
+COPY --from=builder /usr/src/pei_server/icc_ban_key.pem /usr/local/bin
 # Run the application
 CMD ["/usr/local/bin/icc_gateway"]
 

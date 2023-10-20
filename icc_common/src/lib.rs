@@ -18,3 +18,6 @@ pub use async_trait;
 pub use time;
 pub use http_client;
 pub use url;
+pub use hyper_rustls;
+pub use rustls;
+pub use rustls_pemfile;
