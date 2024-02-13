@@ -10,7 +10,7 @@ use icc_common::{
 };
 use self::{
     responses::unknowed_route,
-    handlers::user_handler,
+    handlers::annuaire_handler,
 };
 
 // A boxed type definition for your async views.
@@ -43,9 +43,9 @@ pub async fn router(req: Request<Body>) -> Result<Response<Body>, Error> {
     let path = req.uri().path();
 
     let (handler, params) = match_request!(method, path, {
-        "/user/*" => {
-            POST => crate::route_handler!(user_handler), 
-            GET => crate::route_handler!(user_handler), 
+        "/annuaire/*" => {
+            POST => crate::route_handler!(annuaire_handler), 
+            GET => crate::route_handler!(annuaire_handler),
         },
         "/*" => {
             POST => crate::route_handler!(unknowed_route),

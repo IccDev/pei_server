@@ -9,7 +9,7 @@ use icc_common::{
     sqlx
 };
 use inter_services_messages::{users::{AnnuaireSearch, AnnuaireSearchResponse, RawStar, Meta, Star}, ResponseData, UserResponseData};
-
+use std::collections::BTreeMap;
 
 
 #[async_trait::async_trait] 
@@ -148,7 +148,7 @@ fn search_all() -> String {
 fn raw_star_into_star(res: &[RawStar]) -> Vec<Star> {
     let mut emails: Vec<_> = res.iter().map(|r| r.email.clone()).collect();
     emails.dedup();
-    let mut output: Vec<Star> = vec![];
+    let mut output: BTreeMap<String, Star> = BTreeMap::new();
     for email in emails.iter() {
         let email_data: Vec<_> = res.iter().filter(|r| r.email == *email).collect();
         match email_data.first() {
@@ -159,19 +159,27 @@ fn raw_star_into_star(res: &[RawStar]) -> Vec<Star> {
                 metiers.dedup();
                 let mut eglises: Vec<_> = email_data.iter().map(|e| Meta{nom: e.eglise.clone(), desc: e.eglise_desc.clone()}).collect();
                 eglises.dedup();
-                output.push(Star {
-                        nom: first.nom.clone(),
-                        prenom: first.prenom.clone(),
-                        email: first.email.clone(),
-                        telephone: first.telephone.clone(),
-                        departements,
-                        metiers,
-                        eglises
-                });
+                match &first.email {
+                    Some(email) => {
+                        output.insert(
+                            email.clone(), 
+                            Star {
+                                nom: first.nom.clone(),
+                                prenom: first.prenom.clone(),
+                                email: first.email.clone(),
+                                telephone: first.telephone.clone(),
+                                departements,
+                                metiers,
+                                eglises
+                            }
+                        );
+                    },
+                    None => {}
+                }
             },
             None => {}
         }
     }
 
-    output
+    output.iter().map(|(_, o)| o.to_owned()).collect()
 }

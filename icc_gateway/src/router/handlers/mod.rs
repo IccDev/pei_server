@@ -1,3 +1,3 @@
-mod user_routes;
+mod annuaire_routes;
 
-pub(crate) use user_routes::*;
+pub(crate) use annuaire_routes::*;

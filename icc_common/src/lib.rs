@@ -9,10 +9,12 @@ pub use mime;
 pub use uuid;
 pub use remoc;
 pub use acteur;
-/*pub use mailchecker;
+/*
+pub use mailchecker;
 pub use zxcvbn;
 pub use chbs;
-pub use argon2;*/
+pub use argon2;
+*/
 pub use sqlx;
 pub use async_trait;
 pub use time;
@@ -21,3 +23,4 @@ pub use url;
 pub use hyper_rustls;
 pub use rustls;
 pub use rustls_pemfile;
+pub use rayon;

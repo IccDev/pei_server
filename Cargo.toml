@@ -10,14 +10,14 @@ name = "icc_gateway"
 path = "icc_gateway/src/main.rs"
 
 [[bin]]
-name = "icc_users"
-path = "icc_users/src/main.rs"
+name = "icc_annuaire"
+path = "icc_annuaire/src/main.rs"
 
 
 [workspace]
 members = [
     "icc_gateway",
-    "icc_users",
+    "icc_annuaire",
     "icc_common",
     "inter_services_messages"
 
