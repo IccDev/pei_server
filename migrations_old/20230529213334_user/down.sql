@@ -1,3 +1,0 @@
-DROP TABLE IF EXISTS icc.users;
-
-DROP SCHEMA IF EXISTS icc;
