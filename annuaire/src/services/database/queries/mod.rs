@@ -1,5 +1,3 @@
 mod search_stars;
 
-
-
-pub use search_stars::*;
+pub(crate) use search_stars::*;

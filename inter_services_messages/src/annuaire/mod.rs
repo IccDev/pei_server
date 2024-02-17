@@ -2,7 +2,6 @@ mod model;
 
 pub use model::*;
 use common::{
-    acteur::Acteur, 
     sqlx::{FromRow, Row, Error, postgres::PgRow},
     serde::{self, Deserialize, Serialize}
 };

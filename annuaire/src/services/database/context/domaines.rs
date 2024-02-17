@@ -5,7 +5,7 @@ use inter_services_messages::annuaire::{RowId, Domaine};
 
 impl DatabaseService {
 
-    pub(crate) async fn domaines(&self) -> Vec<Domaine> {
+    pub(crate) async fn _domaines(&self) -> Vec<Domaine> {
     
         match sqlx::query_as::<_, Domaine>(&self.domaines_sql())
         .fetch_all(&self.pool)

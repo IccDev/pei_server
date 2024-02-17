@@ -5,7 +5,7 @@ use inter_services_messages::annuaire::{RowId, Localite};
 
 impl DatabaseService {
 
-    pub(crate) async fn localites(&self) -> Vec<Localite> {
+    pub(crate) async fn _localites(&self) -> Vec<Localite> {
     
         match sqlx::query_as::<_, Localite>(&self.localite_sql())
         .fetch_all(&self.pool)

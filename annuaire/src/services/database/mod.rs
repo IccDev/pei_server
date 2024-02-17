@@ -3,13 +3,13 @@ mod queries;
 mod context;
 
 //pub use mutations::*;
-pub use queries::*;
-pub use context::*;
+//pub use queries::*;
+//pub use context::*;
 
 
 use std::env;
 use common::{
-    acteur::{Service, Actor, ServiceConfiguration, ServiceAssistant, ActorAssistant},
+    acteur::{Service, Actor, ServiceConfiguration, ServiceAssistant},
     sqlx::postgres::PgPool,
     async_trait
 };

@@ -1,6 +1,6 @@
 use crate::services::database::DatabaseService;
 use common::sqlx;
-use inter_services_messages::annuaire::{RowId, Contact};
+use inter_services_messages::annuaire::Contact;
 
 impl DatabaseService {
 

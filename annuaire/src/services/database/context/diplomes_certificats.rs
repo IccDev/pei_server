@@ -5,7 +5,7 @@ use inter_services_messages::annuaire::{RowId, DiplomeCertificat};
 
 impl DatabaseService {
 
-    pub(crate) async fn diplomes(&self) -> Vec<DiplomeCertificat> {
+    pub(crate) async fn _diplomes(&self) -> Vec<DiplomeCertificat> {
         match sqlx::query_as::<_, DiplomeCertificat>(&self.diplomes_sql())
         .fetch_all(&self.pool)
         .await 

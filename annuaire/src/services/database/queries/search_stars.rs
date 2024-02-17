@@ -1,9 +1,7 @@
 use crate::services::DatabaseService;
 use common::{
     acteur::{Serve, ServiceAssistant},
-    async_trait,
-    sqlx,
-    //rayon::prelude::*
+    async_trait
 };
 use inter_services_messages::{annuaire::{User, RowId, AnnuaireSearchInput, /*AnnuaireSearch,*/ AnnuaireSearchOutput/*, AnnuaireSearchResponse*/}, ResponseData};
 use std::collections::{BTreeMap, HashSet};
@@ -12,14 +10,14 @@ use std::collections::{BTreeMap, HashSet};
 impl Serve<AnnuaireSearchInput> for DatabaseService {
     type Response = Result<ResponseData, String>;
 
-    async fn handle(&self, message: AnnuaireSearchInput, system: &ServiceAssistant<Self>) -> Self::Response {
-        self.search_stars(message, &system).await
+    async fn handle(&self, message: AnnuaireSearchInput, _system: &ServiceAssistant<Self>) -> Self::Response {
+        self.search_stars(message).await
     }
 }
 
 impl DatabaseService {
     
-    pub(crate) async fn search_stars(&self, msg: AnnuaireSearchInput, system: &ServiceAssistant<Self>) -> Result<ResponseData, String> {
+    pub(crate) async fn search_stars(&self, msg: AnnuaireSearchInput) -> Result<ResponseData, String> {
         let tables = self.get_related_tables(&msg).await;
         let users = self.get_user_ids(&tables).await;
         let data = self.get_users(&users, msg.church.as_deref()).await;

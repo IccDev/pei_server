@@ -5,7 +5,7 @@ use inter_services_messages::annuaire::{RowId, Titre};
 
 impl DatabaseService {
 
-    pub(crate) async fn titres(&self) -> Vec<Titre> {
+    pub(crate) async fn _titres(&self) -> Vec<Titre> {
     
         match sqlx::query_as::<_, Titre>(&self.titres_sql())
         .fetch_all(&self.pool)
