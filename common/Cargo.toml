@@ -1,5 +1,5 @@
 [package]
-name = "icc_common"
+name = "common"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,27 +9,24 @@ edition = "2021"
 tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net"]}
 tracing = "0.1.26"
 tracing-subscriber = "0.3.1"
-hyper = {version = "0.14", features = ["server", "tcp", "http1", "http2"]}
-futures = "0.3"
-match_request = "0.1"
-multipart = "0.18"
-mime = "0.3"
-uuid = { version = "1.3", features = ["v4", "serde", "macro-diagnostics"] }
-remoc = { version = "0.10", features = ["rch"] }
+# hyper = {version = "1.1", features = ["server", "tcp", "http1", "http2"]}
+# futures = "0.3"
+# match_request = "0.1"
+# multipart = "0.18"
+# mime = "0.3"
+# uuid = { version = "1.3", features = ["v4", "serde", "macro-diagnostics"] }
+remoc = { version = "0.11", features = ["rch"] }
 acteur = "0.12"
-http-client = { version = "6.5", default-features = false, features = ["h1_client", "rustls"]}
-hyper-rustls = "0.24"
-rustls = "0.21"
-rustls-pemfile = "1.0"
+# http-client = { version = "6.5", default-features = false, features = ["h1_client", "rustls"]}
+# hyper-rustls = "0.26"
+# rustls = "0.22"
+# rustls-pemfile = "2.0"
 rayon = "1.8"
-#reqwest = { version = "0.11", features = [ "json", "rustls-tls" ], default-features = false }
-#mailchecker = "5.0"
-#zxcvbn = "2.2"
-#chbs = "0.1"
-#rust-argon2 = "1.0"
 sqlx = { version = "0.7", features = ["postgres", "runtime-async-std-rustls", "time"]}
 async-trait = "0.1"
-time =  {version = "0.3", features = ["serde-human-readable"]}
-url = "2.4"
-#openssl = { version = "0.10.35", features = ["vendored"] }
-#openssl-src = "300.1"
+# time =  {version = "0.3", features = ["serde-human-readable"]}
+# url = "2.4"
+warp = "0.3"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"

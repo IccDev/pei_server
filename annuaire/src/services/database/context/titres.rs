@@ -1,22 +1,13 @@
-use crate::{
-    services::{
-        database::DatabaseService
-    }
-};
-use icc_common::{
-    sqlx
-};
-use inter_services_messages::{
-    ResponseData, 
-    annuaire::{AnnuaireSearch, Titre}
-};
+use crate::services::database::DatabaseService;
+use common::sqlx;
+use inter_services_messages::annuaire::{RowId, Titre};
 
 
 impl DatabaseService {
 
-    pub(crate) async fn titres_by_user_id(&self, id: &i32) -> Vec<Titre> {
+    pub(crate) async fn titres(&self) -> Vec<Titre> {
     
-        match sqlx::query_as::<_, Titre>(&self.titres_by_user_id_sql(&id).as_str())
+        match sqlx::query_as::<_, Titre>(&self.titres_sql())
         .fetch_all(&self.pool)
         .await 
         {
@@ -30,13 +21,47 @@ impl DatabaseService {
         }
     }
 
-    fn titres_by_user_id_sql(&self, id: &i32) -> String {
-        format!(r#"
-        SELECT t.id, t.nom, COALESCE(t.description, '') as description
+    pub(crate) async fn titres_by_user_id(&self, user_id: &i32) -> Vec<Titre> {
+    
+        match sqlx::query_as::<_, Titre>(&self.titres_by_user_id_sql(&user_id).as_ref())
+        .fetch_all(&self.pool)
+        .await 
+        {
+            Ok(res) => {
+                res.to_vec()
+            },
+            Err(e) => {
+                println!("err in titres: {e:#?}");
+                vec![]
+            }
+        }
+    }
+
+    pub(crate) async fn titres_search_key(&self, key: &str) -> Result<Vec<RowId>, String> {
+        match sqlx::query_as::<_, RowId>(&self.search_in_table("titres", &key))
+        .fetch_all(&self.pool)
+        .await 
+        {
+            Ok(res) => {
+                Ok(res.to_vec())
+            },
+            Err(e) => {
+                println!("err in titres search key: {e:#?}");
+                Err(format!("{e:#?}"))
+            }
+        }
+    }
+
+    fn titres_sql(&self) -> &str {
+        r#"SELECT t.id, t.nom, COALESCE(t.description, '') as description
+        FROM annuaire.titres t"#
+    }
+
+    fn titres_by_user_id_sql(&self, user_id: &i32) -> String {
+        format!(r#"SELECT t.id, t.nom, COALESCE(t.description, '') as description
         FROM annuaire.titres t
         join annuaire.user_titres ut
         on t.id = ut.id_titre
-        where ut.id_user = {id};
-        "#)
+        WHERE ut.id_user = {user_id}"#)
     }
 }

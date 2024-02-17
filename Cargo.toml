@@ -6,23 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name = "icc_gateway"
-path = "icc_gateway/src/main.rs"
+name = "gateway"
+path = "gateway/src/main.rs"
 
 [[bin]]
-name = "icc_annuaire"
-path = "icc_annuaire/src/main.rs"
+name = "annuaire"
+path = "annuaire/src/main.rs"
 
 
 [workspace]
 members = [
-    "icc_gateway",
-    "icc_annuaire",
-    "icc_common",
+    "gateway",
+    "annuaire",
+    "common",
     "inter_services_messages"
-
-    #"/usr/src/pei_server/icc_gateway",
-    #"/usr/src/pei_server/icc_users",
-    #"/usr/src/pei_server/icc_common",
-    #"/usr/src/pei_server/inter_services_messages",
 ]

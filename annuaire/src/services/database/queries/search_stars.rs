@@ -1,15 +1,11 @@
-use crate::{
-    services::{
-        database::{DatabaseService, AnnuaireTableActor}
-    }
-};
-use icc_common::{
+use crate::services::DatabaseService;
+use common::{
     acteur::{Serve, ServiceAssistant},
     async_trait,
     sqlx,
-    rayon::prelude::*
+    //rayon::prelude::*
 };
-use inter_services_messages::{annuaire::{User, AnnuaireSearchInput, AnnuaireSearch, AnnuaireSearchOutput, AnnuaireSearchResponse}, ResponseData};
+use inter_services_messages::{annuaire::{User, RowId, AnnuaireSearchInput, /*AnnuaireSearch,*/ AnnuaireSearchOutput/*, AnnuaireSearchResponse*/}, ResponseData};
 use std::collections::{BTreeMap, HashSet};
 
 #[async_trait::async_trait] 
@@ -22,273 +18,288 @@ impl Serve<AnnuaireSearchInput> for DatabaseService {
 }
 
 impl DatabaseService {
+    
     pub(crate) async fn search_stars(&self, msg: AnnuaireSearchInput, system: &ServiceAssistant<Self>) -> Result<ResponseData, String> {
-        //println!("msg: {msg:#?}");
-
-        let tables = self.get_related_tables(&msg, &system).await;
-        let users = self.get_user_ids(&tables, &system).await;
-        //println!("users: {users:?}");
-        let filter_campus = self.get_campus_from_tables(&tables);
-        let users_ids = self.unique_ids(&users);
-        let data = self.get_users(&users_ids, &filter_campus).await;
-
-        //println!("users: {users:#?}");
+        let tables = self.get_related_tables(&msg).await;
+        let users = self.get_user_ids(&tables).await;
+        let data = self.get_users(&users, msg.church.as_deref()).await;
 
         Ok(ResponseData::Annuaire(AnnuaireSearchOutput {data}))
     }
 
-    fn unique_ids(&self, users: &[AnnuaireSearchResponse]) -> Vec<i32> {
-        let users_ids: Vec<i32> = users.iter().map(|u| {
-            match u {
-                AnnuaireSearchResponse::UserIds(values) => {
-                    values.iter().map(|r| {
-                        match r.id {
-                            Some(d) => d,
-                            None => 0
-                        }
-                    })
-                    .filter(|i| *i != 0)
-                    .collect()
-                },
-                _ => vec![]
-            }
-        })
-        .flatten()
-        .collect();
-
-        let mut users_ids_set = HashSet::new();
-        users_ids.iter().for_each(|e| {
-            let _ = users_ids_set.insert(e.to_owned());
-        });
-
-        Vec::from_iter(users_ids_set)
+    pub(crate) fn search_in_table(&self, table: &str, key: &str) -> String {
+        format!(r#"SELECT t.id
+            FROM annuaire.{table} t
+            WHERE tsv @@ to_tsquery('pg_catalog.english', '"{key}"');"#)
     }
-
-    fn get_campus_from_tables(&self, tables: &[AnnuaireSearchResponse]) -> Vec<i32> {
+    
+    async fn get_user_ids(&self, tables: &BTreeMap<String, Vec<RowId>>) -> HashSet<RowId> {
         let mut result = vec![];
 
-        for t in tables {
-            match t {
-                AnnuaireSearchResponse::ByKeyResponse((t_name, row_ids)) => {
-                    let ids: Vec<i32> = row_ids.iter().map(|i| i.id.unwrap_or_default()).collect();
-                    match t_name.as_ref() {
-                        "campus" => {
-                            result.extend_from_slice(&ids);
-                        },
-                        _ => {}
-                    }
+        for (t_name, row_ids) in tables {
+            let ids: Vec<i32> = row_ids.iter().map(|i| i.id.unwrap_or_default()).collect();
+            let ids_vec: Vec<_> = ids.iter().map(|i| format!("{i}")).collect();
+            let ids_str = ids_vec.join(",");
+
+            match t_name.as_ref() {
+                "competences" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_competences_user_id(&ids_str).await);
+                },
+                "diplomes_certificats" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_diplomes_user_id(&ids_str).await);
+                },
+                "entreprises" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_entreprises_user_id(&ids_str).await);
+                },
+                "ecoles" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_ecoles_user_id(&ids_str).await);
+                },
+                "titres" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_titres_user_id(&ids_str).await);
+                },
+                "specialites" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_specialites_user_id(&ids_str).await);
+                },
+                "domaines" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_domaines_user_id(&ids_str).await);
+                },
+                "departements" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_department_user_id(&ids_str).await);
+                },
+                "langues" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_langues_user_id(&ids_str).await);
+                },
+
+                "localites" if ids.len() > 0 => {
+                    result.extend_from_slice(&self.user_localites_user_id(&ids_str).await);
                 },
                 _ => {}
             }
-        };
+        }
 
-        result
+        result.into_iter().collect()
     }
-
-    async fn get_user_ids(&self, tables: &[AnnuaireSearchResponse], system: &ServiceAssistant<Self>) -> Vec<AnnuaireSearchResponse> {
-        let mut result = vec![];
-
-        for t in tables {
-            match t {
-                AnnuaireSearchResponse::ByKeyResponse((t_name, row_ids)) => {
-                    let ids: Vec<i32> = row_ids.iter().map(|i| i.id.unwrap_or_default()).collect();
-                    match t_name.as_ref() {
-                        "competences" if ids.len() > 0 => {
-                            if let Ok(Ok(user_competences)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_competences".to_string(), 
-                                AnnuaireSearch::ByIds(("id_competence".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_competences);
-                            }
-                        },
-                        "diplomes_certificats" if ids.len() > 0 => {
-                            if let Ok(Ok(user_competences)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_diplomes".to_string(), 
-                                AnnuaireSearch::ByIds(("id_diplome".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_competences);
-                            }
-                        },
-                        "entreprises" if ids.len() > 0 => {
-                            if let Ok(Ok(user_entreprises)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_entreprises".to_string(), 
-                                AnnuaireSearch::ByIds(("id_entreprise".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_entreprises);
-                            }
-                        },
-                        "ecoles" if ids.len() > 0 => {
-                            if let Ok(Ok(user_ecoles)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_ecoles".to_string(), 
-                                AnnuaireSearch::ByIds(("id_ecole".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_ecoles);
-                            }
-                        },
-                        "titres" if ids.len() > 0 => {
-                            if let Ok(Ok(user_titres)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_titres".to_string(), 
-                                AnnuaireSearch::ByIds(("id_titre".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_titres);
-                            }
-                        },
-                        "specialites" if ids.len() > 0 => {
-                            if let Ok(Ok(user_specialites)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_specialites".to_string(), 
-                                AnnuaireSearch::ByIds(("id_specialite".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_specialites);
-                            }
-                        },
-                        "domaines" if ids.len() > 0 => {
-                            if let Ok(Ok(user_domaines)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_domaines".to_string(), 
-                                AnnuaireSearch::ByIds(("id_domaine".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_domaines);
-                            }
-                        },
-                        "departements" if ids.len() > 0 => {
-                            if let Ok(Ok(user_department)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_department".to_string(), 
-                                AnnuaireSearch::ByIds(("id_departement".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_department);
-                            }
-                        },
-                        "langues" if ids.len() > 0 => {
-                            if let Ok(Ok(user_langues)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_langues".to_string(), 
-                                AnnuaireSearch::ByIds(("id_langues".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_langues);
-                            }
-                        },
-                        /*"campus" if ids.len() > 0 => {
-                            if let Ok(Ok(user_campus)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_campus".to_string(), 
-                                AnnuaireSearch::ByIds(("id_campus".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_campus);
-                            }
-                        },*/
-                        "localites" if ids.len() > 0 => {
-                            if let Ok(Ok(user_localites)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-                                "user_localites".to_string(), 
-                                AnnuaireSearch::ByIds(("id_localite".to_string(), ids.clone()))
-                            ).await {
-                                result.push(user_localites);
-                            }
-                        },
-                        _ => {}
-                    }
-                },
-                _ => {}
-            }
-        };
-
-        result
-    }
-
-    async fn get_related_tables(&self, msg: &AnnuaireSearchInput, system: &ServiceAssistant<Self>) -> Vec<AnnuaireSearchResponse> {
-        let mut result: Vec<_> = vec![];
+    
+    async fn get_related_tables(&self, msg: &AnnuaireSearchInput) -> BTreeMap<String, Vec<RowId>> {
+        let mut result: BTreeMap<String, Vec<RowId>> = BTreeMap::new();
         
-        if let Ok(Ok(icc_user_plus_infos)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "user_plus_infos".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_user_plus_infos);
+        match &msg.key {
+            Some(key) => {
+                match self.campus_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("campus".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("Campus: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_competences)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "competences".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_competences);
+        match &msg.key {
+            Some(key) => {
+                match self.user_plus_infos_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("user_plus_infos".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("user_plus_infos: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_diplomes_certificats)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "diplomes_certificats".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_diplomes_certificats);
+        match &msg.key {
+            Some(key) => {
+                match self.competence_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("competences".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("competences: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_entreprises)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "entreprises".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_entreprises);
+        match &msg.key {
+            Some(key) => {
+                match self.diplomes_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("diplomes_certificats".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("diplomes_certificats: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_ecoles)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "ecoles".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_ecoles);
+        match &msg.key {
+            Some(key) => {
+                match self.entreprises_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("entreprises".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("entreprises: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_titres)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "titres".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_titres);
+        match &msg.key {
+            Some(key) => {
+                match self.ecoles_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("ecoles".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("ecoles: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_specialites)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "specialites".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_specialites);
+        match &msg.key {
+            Some(key) => {
+                match self.titres_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("titres".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("titres: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_domaines)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "domaines".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_domaines);
+        match &msg.key {
+            Some(key) => {
+                match self.specialites_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("specialites".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("specialites: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_departements)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "departements".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_departements);
+        match &msg.key {
+            Some(key) => {
+                match self.domaines_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("domaines".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("domaines: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_langues)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "langues".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_langues);
+        match &msg.key {
+            Some(key) => {
+                match self.departements_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("departements".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("departements: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_campus)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "campus".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_campus);
+        match &msg.key {
+            Some(key) => {
+                match self.langues_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("langues".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("langues: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
-        if let Ok(Ok(icc_localites)) = system.call_actor::<AnnuaireTableActor, AnnuaireSearch>(
-            "localites".to_string(), 
-            AnnuaireSearch::ByKey(msg.clone())
-        ).await {
-            result.push(icc_localites);
+        match &msg.key {
+            Some(key) => {
+                match self.localites_search_key(&key).await {
+                    Ok(res) => {
+                        if res.len() > 0 {
+                            result.insert("localites".to_string(), res);
+                        }
+                    },
+                    Err(e) => {
+                        println!("localites: {e:#?}");
+                    }
+                }
+            },
+            None => {}
         }
 
         result
     }
 
-    async fn get_users(&self, ids: &[i32], filter_campus: &[i32]) -> Vec<User> {
-        let mut users = self.users_by_ids(&ids, &filter_campus).await;
+    
+    async fn get_users(&self, ids: &HashSet<RowId>, church: Option<&str>) -> Vec<User> {
+        let filter_campus: Vec<i32> = match church {
+            Some(ch) => {
+                match self.campus_search_key(&ch).await {
+                    Ok(res) => {
+                        res.iter().filter(|r| r.id.is_some()).map(|r| r.id.unwrap()).collect()
+                    },
+                    Err(_) => vec![]
+                }
+            },
+            None => vec![]
+        };
+
+        let users_ids: Vec<_> = ids.iter().filter(|r| r.id.is_some()).map(|r| r.id.unwrap()).collect();
+        let mut users = self.users_by_ids(&users_ids, &filter_campus).await;
         //println!("users: {users:?}");
         for user in &mut users {
-            user.departements = self.departements_by_user_id(&user.id.unwrap_or_default()).await;
-            user.competences = self.competence_by_user_id(&user.id.unwrap_or_default()).await;
             user.campus = self.campus_by_user_id(&user.id.unwrap_or_default()).await;
+            user.departements = self.departements_by_user_id(&user.id.unwrap_or_default()).await;
             user.contact = self.contact_by_user_id(&user.id.unwrap_or_default()).await;
+            user.competences = self.competence_by_user_id(&user.id.unwrap_or_default()).await;
             user.diplomes = self.diplomes_by_user_id(&user.id.unwrap_or_default()).await;
             user.domaines = self.domaines_by_user_id(&user.id.unwrap_or_default()).await;
             user.ecoles = self.ecoles_by_user_id(&user.id.unwrap_or_default()).await;
@@ -297,7 +308,7 @@ impl DatabaseService {
             user.localites = self.localites_by_user_id(&user.id.unwrap_or_default()).await;
             user.specialites = self.specialites_by_user_id(&user.id.unwrap_or_default()).await;
             user.titres = self.titres_by_user_id(&user.id.unwrap_or_default()).await;
-            //user.user_plus_infos = self.user_plus_infos_by_user_id(&user.id.unwrap_or_default()).await;
+            user.user_plus_infos = self.user_plus_infos_by_user_id(&user.id.unwrap_or_default()).await;
         }
 
         users

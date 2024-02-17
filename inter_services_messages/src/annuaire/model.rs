@@ -1,7 +1,10 @@
-use serde_derive::{Deserialize, Serialize};
-use icc_common::sqlx::{FromRow, Row, Error, postgres::PgRow};
+use common::{
+    serde::{self, Deserialize, Serialize},
+    sqlx::{FromRow, Row, Error, postgres::PgRow}
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct User {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -17,7 +20,7 @@ pub struct User {
     pub specialites: Vec<Specialite>,
     pub ecoles: Vec<Ecole>,
     pub entreprises: Vec<Entreprise>,
-    pub localites: Vec<Localite>,
+    pub localites: Option<Localite>,
     pub diplomes: Vec<DiplomeCertificat>,
     pub competences: Vec<Competence>,
     pub user_plus_infos: Option<UserPlusInfos>
@@ -36,8 +39,8 @@ impl FromRow<'_, PgRow> for User {
     }
 }
 
-
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Localite {
     pub id: Option<i32>,
     pub pays: Option<String>,
@@ -48,6 +51,7 @@ pub struct Localite {
     pub adresse: Option<String>,
     pub consentement: Option<bool>,
 }
+
 impl FromRow<'_, PgRow> for Localite {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
         Ok(Self {
@@ -64,8 +68,10 @@ impl FromRow<'_, PgRow> for Localite {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Campus {
     pub id: Option<i32>,
+    pub id_localite: Option<i32>,
     pub localite: Option<Localite>,
     pub nom: Option<String>,
     pub description: Option<String>
@@ -77,12 +83,14 @@ impl FromRow<'_, PgRow> for Campus {
             id: Some(row.try_get("id")?),
             nom: Some(row.try_get("nom")?),
             description: Some(row.try_get("description")?),
+            id_localite: Some(row.try_get("id_localite")?),
             localite: None
         })
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Langue {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -100,8 +108,10 @@ impl FromRow<'_, PgRow> for Langue {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Departement {
     pub id: Option<i32>,
+    pub id_campus: Option<i32>,
     pub campus: Option<Campus>,
     pub nom: Option<String>,
     pub abbreviation: Option<String>,
@@ -112,16 +122,17 @@ impl FromRow<'_, PgRow> for Departement {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
         Ok(Self {
             id: Some(row.try_get("id")?),
-            //campus: Some(row.try_get("nom")?),
+            id_campus: Some(row.try_get("id_campus")?),
             nom: Some(row.try_get("nom")?),
             abbreviation: Some(row.try_get("abbreviation")?),
             description: Some(row.try_get("description")?),
-            ..Departement::default()
+            campus: None
         })
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Domaine {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -139,6 +150,7 @@ impl FromRow<'_, PgRow> for Domaine {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Titre {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -156,6 +168,7 @@ impl FromRow<'_, PgRow> for Titre {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Specialite {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -173,8 +186,10 @@ impl FromRow<'_, PgRow> for Specialite {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Ecole {
     pub id: Option<i32>,
+    pub id_localite: Option<i32>,
     pub localite: Option<Localite>,
     pub nom: Option<String>,
     pub description: Option<String>,
@@ -185,6 +200,7 @@ impl FromRow<'_, PgRow> for Ecole {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
         Ok(Self {
             id: Some(row.try_get("id")?),
+            id_localite: Some(row.try_get("id_localite")?),
             nom: Some(row.try_get("nom")?),
             description: Some(row.try_get("description")?),
             consentement: Some(row.try_get("consentement")?),
@@ -194,8 +210,10 @@ impl FromRow<'_, PgRow> for Ecole {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Entreprise {
     pub id: Option<i32>,
+    pub id_localite: Option<i32>,
     pub localite: Option<Localite>,
     pub nom: Option<String>,
     pub description: Option<String>
@@ -205,6 +223,7 @@ impl FromRow<'_, PgRow> for Entreprise {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
         Ok(Self {
             id: Some(row.try_get("id")?),
+            id_localite: Some(row.try_get("id_localite")?),
             nom: Some(row.try_get("nom")?),
             description: Some(row.try_get("description")?),
             localite: None
@@ -212,8 +231,8 @@ impl FromRow<'_, PgRow> for Entreprise {
     }
 }
 
-
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct DiplomeCertificat {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -231,6 +250,7 @@ impl FromRow<'_, PgRow> for DiplomeCertificat {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Competence {
     pub id: Option<i32>,
     pub nom: Option<String>,
@@ -248,6 +268,7 @@ impl FromRow<'_, PgRow> for Competence {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct UserPlusInfos {
     pub id: Option<i32>,
     pub description: Option<String>
@@ -263,6 +284,7 @@ impl FromRow<'_, PgRow> for UserPlusInfos {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "self::serde")]
 pub struct Contact {
     pub id: Option<i32>,
     pub gsm: Option<String>,

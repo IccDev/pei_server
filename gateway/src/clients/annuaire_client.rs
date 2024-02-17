@@ -1,13 +1,30 @@
-use icc_common::{
+use common::{
     tokio::net::TcpStream,
     remoc::{self, rch},
-    tokio
+    tokio,
+    warp
 };
-use inter_services_messages::{Message, MessageData, ResponseData};
+use inter_services_messages::{
+    Message, 
+    MessageData, 
+    ResponseData,
+    annuaire::{AnnuaireMessage, AnnuaireSearchInput, User},
+    Error
+};
 use std::env;
 
+pub async fn annuaire_search(input: AnnuaireSearchInput) -> impl warp::Reply {
+    match client(MessageData::Annuaire(AnnuaireMessage::Search(input))).await {
+        Ok(res) => warp::reply::json(&res),
+        Err(e) => warp::reply::json(&Error::from(e.as_ref()))
+    }
+}
 
-pub async fn client(msg: MessageData) -> Result<ResponseData, String> {
+pub async fn annuaire_register_post(input: User) -> Result<impl warp::Reply, warp::Rejection> {
+    Ok(warp::reply::json(&vec![input]))
+}
+
+async fn client(msg: MessageData) -> Result<ResponseData, String> {
     let address = match env::var("AnnuaireClientAddress") {
         Ok(a) => a,
         Err(_) => String::from("127.0.0.1:4014")

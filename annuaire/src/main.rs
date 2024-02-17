@@ -1,17 +1,16 @@
 pub mod services;
+mod server;
+
+use server::server;
+use crate::services::DatabaseService;
 
 use std::env;
-use icc_common::{
+use common::{
     tracing::{info, subscriber::set_global_default},
     tracing_subscriber::FmtSubscriber,
     tokio::{self, net::TcpListener},
     remoc::{self, rch},
     acteur::Acteur
-};
-use inter_services_messages::{Message, MessageData};
-use services::{
-    annuaire,
-    DatabaseService
 };
 
 #[tokio::main]
@@ -44,24 +43,5 @@ async fn main() {
             // Run server.
             server(rx, acteur_clone.clone()).await;
         });
-    }
-}
-
-
-// This would be run on the server.
-async fn server(mut rx: rch::base::Receiver<Message>, acteur: Acteur) {
-    while let Some(req) = rx.recv().await.unwrap() {
-        match req.data {
-            MessageData::Annuaire(search) => {
-                match annuaire::search_stars(search, acteur.clone()).await {
-                    Ok(r) => {
-                        req.sender.send(Ok(r)).unwrap();
-                    },
-                    Err(e) => {
-                        req.sender.send(Err(e)).unwrap();
-                    }
-                }
-            }
-        }
     }
 }

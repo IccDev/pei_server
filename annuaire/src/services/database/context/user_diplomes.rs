@@ -1,35 +1,28 @@
-use crate::{
-    services::{
-        database::DatabaseService
-    }
-};
-use icc_common::{
-    acteur::{Serve, ServiceAssistant},
-    async_trait
-};
-use inter_services_messages::{ResponseData, annuaire::AnnuaireSearch};
-
-
-#[async_trait::async_trait]
-impl Serve<AnnuaireSearch> for DatabaseService {
-    type Response = Result<ResponseData, String>;
-
-    async fn handle(&self, message: AnnuaireSearch, _system: &ServiceAssistant<Self>) -> Self::Response {
-        match message {
-            AnnuaireSearch::ByKey(key) => self.user_diplomes_by_key(key).await,
-            AnnuaireSearch::ById(id) => self.user_diplomes_by_id(id).await
-        }
-    }
-}
+use crate::services::database::DatabaseService;
+use common::sqlx;
+use inter_services_messages::annuaire::RowId;
 
 impl DatabaseService {
-    pub(crate) async fn user_diplomes_by_key(&self, msg: String) -> Result<ResponseData, String> {
-    
-        Err(String::with_capacity(0))
+    pub(crate) async fn user_diplomes_user_id(&self, msg: &str) -> Vec<RowId> {
+        match sqlx::query_as::<_, RowId>(&self.user_diplomes_user_id_sql(&msg))
+        .fetch_all(&self.pool)
+        .await 
+        {
+            Ok(res) => {
+                res.to_vec()
+            },
+            Err(e) => {
+                println!("err in user_diplomes: {e:#?}");
+                vec![]
+            }
+        }
     }
 
-    pub(crate) async fn user_diplomes_by_id(&self, msg: i32) -> Result<ResponseData, String> {
-    
-        Err(String::with_capacity(0))
+    fn user_diplomes_user_id_sql(&self, msg: &str) -> String {
+        format!(r#"
+        SELECT uc.id_user as id
+        FROM annuaire.user_diplomes uc 
+        where uc.id_diplome in ({msg});
+        "#)
     }
 }

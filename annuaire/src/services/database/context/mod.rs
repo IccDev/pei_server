@@ -1,7 +1,6 @@
 mod campus;
 mod departements;
 mod competences;
-mod user_contact;
 mod diplomes_certificats;
 mod domaines;
 mod ecoles;
@@ -12,7 +11,7 @@ mod specialites;
 mod titres;
 mod user_plus_infos;
 mod users;
-/*
+mod user_contact;
 mod user_campus;
 mod user_competences;
 mod user_department;
@@ -24,12 +23,10 @@ mod user_langues;
 mod user_localites;
 mod user_specialites;
 mod user_titres;
-*/
 
 pub use campus::*;
 pub use departements::*;
 pub use competences::*;
-pub use user_contact::*;
 pub use diplomes_certificats::*;
 pub use domaines::*;
 pub use ecoles::*;
@@ -40,7 +37,7 @@ pub use specialites::*;
 pub use titres::*;
 pub use user_plus_infos::*;
 pub use users::*;
-/*
+pub use user_contact::*;
 pub use user_campus::*;
 pub use user_competences::*;
 pub use user_department::*;
@@ -52,5 +49,4 @@ pub use user_langues::*;
 pub use user_localites::*;
 pub use user_specialites::*;
 pub use user_titres::*;
-*/
 
