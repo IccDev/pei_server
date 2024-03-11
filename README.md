@@ -38,9 +38,7 @@ docker tag b3d760cc1156 iccbrx/gateway:latest
 docker tag 001b11c0c909 iccbrx/annuaire:latest
 
 # change to icc docker hub
-docker login -u myusername -p mypassword docker.io  
-
-docker login -u iccbrx -p IccDev@2023 docker.io 
+docker login -u myusername -p mypassword docker.io
 
 ## Push images
 docker push iccbrx/gateway:latest
