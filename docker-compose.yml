@@ -1,8 +1,8 @@
 version: "3.9"
-name: pei
+name: pei_dev
 services:
-  annuaire_db:
-    container_name: annuaire_db
+  annuaire_db_2:
+    container_name: annuaire_db_2
     image: "postgres:15.4"
     volumes:
       - ./databases/annuaire:/var/lib/postgresql/data
@@ -10,31 +10,46 @@ services:
       POSTGRES_USER: ${ANNUAIRE_POSTGRES_USER}
       POSTGRES_PASSWORD: ${ANNUAIRE_POSTGRES_PASSWORD}
       POSTGRES_DB: postgres
-      POSTGRES_HOST: annuaire_db
+      POSTGRES_HOST: annuaire_db_2
     networks:
       icc_net:
-        ipv4_address: 192.168.10.10
+        ipv4_address: 192.168.11.10
     ports:
       - "5433:5432"
   
-  icc_gateway:
+  gateway:
       build: 
         context: ./
-        target: gateway_runtime
-      image: djedou/icc_gateway:v_0.3.3
-      container_name: icc_gateway
+        target: gateway
+      #image: djedou/icc_gateway:v_0.3.3
+      container_name: gateway
       networks:
         icc_net:
-          ipv4_address: 192.168.10.12
+          ipv4_address: 192.168.11.12
       ports:
         - 4012:4012
       environment:
-        - GatewayAddress=192.168.10.12:4012
-        - AnnuaireClientAddress=192.168.10.14:4014
-        - AnnuaireDatabaseAddress=postgres://${ANNUAIRE_POSTGRES_USER}:${ANNUAIRE_POSTGRES_PASSWORD}@${ANNUAIRE_POSTGRES_IP}:5433/postgres
+        - GatewayAddress=192.168.11.12:4012
+        - AnnuaireClientAddress=192.168.11.14:4014
       depends_on:
-        - annuaire_db
-
+        - annuaire
+  
+  annuaire:
+      build: 
+        context: ./
+        target: annuaire
+      #image: djedou/icc_annuaire:v_0.3.3
+      container_name: annuaire
+      networks:
+        icc_net:
+          ipv4_address: 192.168.11.14
+      ports:
+        - 4014:4014
+      environment:
+        - AnnuaireClientAddress=192.168.11.14:4014
+        - AnnuaireDatabaseAddressPostgres=postgres://${ANNUAIRE_POSTGRES_USER}:${ANNUAIRE_POSTGRES_PASSWORD}@annuaire_db_2:5432/postgres
+      depends_on:
+        - annuaire_db_2
 
 networks:
   icc_net:
@@ -42,4 +57,4 @@ networks:
       driver: default
       config:
           - 
-            subnet: "192.168.10.0/24"
+            subnet: "192.168.11.0/24"

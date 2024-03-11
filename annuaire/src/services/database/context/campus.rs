@@ -1,18 +1,18 @@
 use crate::services::DatabaseService;
 use common::sqlx;
-use inter_services_messages::annuaire::{Campus, RowId};
+use inter_services_messages::annuaire::{Campus, RowId, Localite};
 
 
 impl DatabaseService {
 
-    pub(crate) async fn _campus(&self) -> Vec<Campus> {
+    pub async fn get_all_campus(&self) -> Vec<Campus> {
         match sqlx::query_as::<_, Campus>(&self.campus_sql())
         .fetch_all(&self.pool)
         .await 
         {
             Ok(mut res) => {
                 for r in &mut *res {
-                    r.localite = self.localite_by_id(r.id_localite.as_ref()).await;
+                    r.localite = self.get_localite_by_id(r.id_localite.as_ref()).await;
                 }
                 res.to_vec()
             },
@@ -23,26 +23,44 @@ impl DatabaseService {
         }
     }
 
-    pub(crate) async fn campus_by_user_id(&self, user_id: &i32) -> Vec<Campus> {
+    pub async fn create_campus(&self, locale_id: &i32, campus: &Campus) -> i32 {
+        self.save_query(
+            format!(r#"insert into annuaire.campus (id_localite, nom, description) 
+            values ( {}, '{}', '{}') 
+            returning id;
+            "#,
+            locale_id,
+            campus.nom.clone().unwrap_or_default(),
+            campus.description.clone().unwrap_or_default()
+        ).as_ref()).await
+    }
+
+    pub async fn save_campus(&self, campus: &Campus, localite: &Localite) -> i32 {
+        let locale_id = self.create_localite(&localite).await;
+        let campus_id = self.create_campus(&locale_id, &campus).await;
+        campus_id
+    }
+
+    pub async fn get_campus_by_user_id(&self, user_id: &i32) -> Option<Campus> {
         match sqlx::query_as::<_, Campus>(&self.campus_by_user_id_sql(&user_id))
         .fetch_all(&self.pool)
         .await 
         {
             Ok(mut res) => {
                 for r in &mut *res {
-                    r.localite = self.localite_by_id(r.id_localite.as_ref()).await;
+                    r.localite = self.get_localite_by_id(r.id_localite.as_ref()).await;
                 }
-                res.to_vec()
+                res.first().cloned()
             },
             Err(e) => {
                 println!("err in campus: {e:#?}");
-                vec![]
+                None
             }
         }
     }
 
-    pub(crate) async fn campus_by_id(&self, id: Option<&i32>) -> Option<Campus> {
-        match id {
+    pub async fn get_campus_by_id(&self, campus_id: Option<&i32>) -> Option<Campus> {
+        match campus_id {
             Some(i) => {
                 match &mut sqlx::query_as::<_, Campus>(&self.campus_by_id_sql(&i))
                 .fetch_all(&self.pool)
@@ -50,7 +68,7 @@ impl DatabaseService {
                 {
                     Ok(res) => {
                         for r in &mut *res {
-                            r.localite = self.localite_by_id(r.id_localite.as_ref()).await;
+                            r.localite = self.get_localite_by_id(r.id_localite.as_ref()).await;
                         }
                         res.first().cloned()
                     },
@@ -64,7 +82,7 @@ impl DatabaseService {
         }
     }
 
-    pub(crate) async fn campus_search_key(&self, key: &str) -> Result<Vec<RowId>, String> {
+    pub async fn search_campus_by_key(&self, key: &str) -> Result<Vec<RowId>, String> {
         match sqlx::query_as::<_, RowId>(&self.search_in_table("campus", &key))
         .fetch_all(&self.pool)
         .await 

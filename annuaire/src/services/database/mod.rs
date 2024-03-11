@@ -1,10 +1,10 @@
-//mod mutations;
+mod mutations;
 mod queries;
 mod context;
 
-//pub use mutations::*;
-//pub use queries::*;
-//pub use context::*;
+pub use mutations::*;
+pub use queries::*;
+pub use context::*;
 
 
 use std::env;
@@ -16,13 +16,13 @@ use common::{
 
 #[derive(Debug)]
 pub struct DatabaseService {
-    pub(crate) pool: PgPool
+    pub pool: PgPool
 }
 
 #[async_trait::async_trait]
 impl Service for DatabaseService {
     async fn initialize(_system: &ServiceAssistant<Self>) -> (Self, ServiceConfiguration) {
-        let address = match env::var("AnnuaireDatabaseAddress") {
+        let address = match env::var("AnnuaireDatabaseAddressPostgres") {
             Ok(a) => a,
             Err(_) => String::from("postgres://icc_admin:icc_admin_2023@127.0.0.1:5433/postgres")
         };

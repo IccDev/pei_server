@@ -1,10 +1,10 @@
 INSERT INTO annuaire.departements ("id_campus", "abbreviation", "nom")
-values	(1, 'dsi', 'Direction des Solution Informatiques'),
-		(1, 'mds', 'icc mds'),
-		(1, 'mce', 'icc mce'),
-		(2, 'dsi', 'Direction des Solution Informatiques'),
-		(2, 'mds', 'icc mds'),
-		(2, 'mce', 'icc mce'),
-		(3, 'dsi', 'Direction des Solution Informatiques'),
-		(3, 'mds', 'icc mds'),
-		(3, 'mce', 'icc mce');
+values	(7, 'dsi', 'Direction des Solution Informatiques'),
+		(7, 'mds', 'icc mds'),
+		(7, 'mce', 'icc mce'),
+		(8, 'dsi', 'Direction des Solution Informatiques'),
+		(8, 'mds', 'icc mds'),
+		(8, 'mce', 'icc mce'),
+		(9, 'dsi', 'Direction des Solution Informatiques'),
+		(9, 'mds', 'icc mds'),
+		(9, 'mce', 'icc mce');

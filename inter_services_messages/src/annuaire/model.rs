@@ -11,7 +11,7 @@ pub struct User {
     pub prenom: Option<String>,
     pub consentement_nom: Option<bool>,
     pub photo: Option<String>,
-    pub campus: Vec<Campus>,
+    pub campus: Option<Campus>,
     pub departements: Vec<Departement>,
     pub contact: Option<Contact>,
     pub langues: Vec<Langue>,
@@ -271,6 +271,7 @@ impl FromRow<'_, PgRow> for Competence {
 #[serde(crate = "self::serde")]
 pub struct UserPlusInfos {
     pub id: Option<i32>,
+    pub id_user: Option<i32>,
     pub description: Option<String>
 }
 
@@ -278,6 +279,7 @@ impl FromRow<'_, PgRow> for UserPlusInfos {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
         Ok(Self {
             id: Some(row.try_get("id")?),
+            id_user: Some(row.try_get("id_user")?),
             description: Some(row.try_get("description")?)
         })
     }

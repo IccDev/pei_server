@@ -24,7 +24,7 @@ pub enum MessageData {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "self::serde")]
 pub enum ResponseData {
-    Annuaire(self::annuaire::AnnuaireSearchOutput)
+    Annuaire(self::annuaire::AnnuaireResponse)
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -1,9 +1,10 @@
 use crate::services::DatabaseService;
 use common::{
     acteur::{Serve, ServiceAssistant},
-    async_trait
+    async_trait,
+    sqlx
 };
-use inter_services_messages::{annuaire::{User, RowId, AnnuaireSearchInput, /*AnnuaireSearch,*/ AnnuaireSearchOutput/*, AnnuaireSearchResponse*/}, ResponseData};
+use inter_services_messages::{annuaire::{User, RowId, AnnuaireSearchInput, AnnuaireResponse, AnnuaireSearchOutput/*, AnnuaireSearchResponse*/}, ResponseData};
 use std::collections::{BTreeMap, HashSet};
 
 #[async_trait::async_trait] 
@@ -17,15 +18,15 @@ impl Serve<AnnuaireSearchInput> for DatabaseService {
 
 impl DatabaseService {
     
-    pub(crate) async fn search_stars(&self, msg: AnnuaireSearchInput) -> Result<ResponseData, String> {
+    pub async fn search_stars(&self, msg: AnnuaireSearchInput) -> Result<ResponseData, String> {
         let tables = self.get_related_tables(&msg).await;
         let users = self.get_user_ids(&tables).await;
         let data = self.get_users(&users, msg.church.as_deref()).await;
 
-        Ok(ResponseData::Annuaire(AnnuaireSearchOutput {data}))
+        Ok(ResponseData::Annuaire(AnnuaireResponse::Search( AnnuaireSearchOutput {data})))
     }
 
-    pub(crate) fn search_in_table(&self, table: &str, key: &str) -> String {
+    pub fn search_in_table(&self, table: &str, key: &str) -> String {
         format!(r#"SELECT t.id
             FROM annuaire.{table} t
             WHERE tsv @@ to_tsquery('pg_catalog.english', '"{key}"');"#)
@@ -83,7 +84,7 @@ impl DatabaseService {
         
         match &msg.key {
             Some(key) => {
-                match self.campus_search_key(&key).await {
+                match self.search_campus_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("campus".to_string(), res);
@@ -99,7 +100,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.user_plus_infos_search_key(&key).await {
+                match self.search_user_plus_infos_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("user_plus_infos".to_string(), res);
@@ -115,7 +116,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.competence_search_key(&key).await {
+                match self.search_competence_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("competences".to_string(), res);
@@ -131,7 +132,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.diplomes_search_key(&key).await {
+                match self.search_diplomes_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("diplomes_certificats".to_string(), res);
@@ -147,7 +148,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.entreprises_search_key(&key).await {
+                match self.search_entreprises_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("entreprises".to_string(), res);
@@ -163,7 +164,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.ecoles_search_key(&key).await {
+                match self.search_ecoles_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("ecoles".to_string(), res);
@@ -179,7 +180,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.titres_search_key(&key).await {
+                match self.search_titres_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("titres".to_string(), res);
@@ -195,7 +196,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.specialites_search_key(&key).await {
+                match self.search_specialites_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("specialites".to_string(), res);
@@ -227,7 +228,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.departements_search_key(&key).await {
+                match self.search_departements_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("departements".to_string(), res);
@@ -243,7 +244,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.langues_search_key(&key).await {
+                match self.search_langues_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("langues".to_string(), res);
@@ -259,7 +260,7 @@ impl DatabaseService {
 
         match &msg.key {
             Some(key) => {
-                match self.localites_search_key(&key).await {
+                match self.search_localites_by_key(&key).await {
                     Ok(res) => {
                         if res.len() > 0 {
                             result.insert("localites".to_string(), res);
@@ -280,7 +281,7 @@ impl DatabaseService {
     async fn get_users(&self, ids: &HashSet<RowId>, church: Option<&str>) -> Vec<User> {
         let filter_campus: Vec<i32> = match church {
             Some(ch) => {
-                match self.campus_search_key(&ch).await {
+                match self.search_campus_by_key(&ch).await {
                     Ok(res) => {
                         res.iter().filter(|r| r.id.is_some()).map(|r| r.id.unwrap()).collect()
                     },
@@ -294,21 +295,39 @@ impl DatabaseService {
         let mut users = self.users_by_ids(&users_ids, &filter_campus).await;
         //println!("users: {users:?}");
         for user in &mut users {
-            user.campus = self.campus_by_user_id(&user.id.unwrap_or_default()).await;
-            user.departements = self.departements_by_user_id(&user.id.unwrap_or_default()).await;
+            user.campus = self.get_campus_by_user_id(&user.id.unwrap_or_default()).await;
+            user.departements = self.get_departements_by_user_id(&user.id.unwrap_or_default()).await;
             user.contact = self.contact_by_user_id(&user.id.unwrap_or_default()).await;
-            user.competences = self.competence_by_user_id(&user.id.unwrap_or_default()).await;
-            user.diplomes = self.diplomes_by_user_id(&user.id.unwrap_or_default()).await;
+            user.competences = self.get_competence_by_user_id(&user.id.unwrap_or_default()).await;
+            user.diplomes = self.get_diplomes_by_user_id(&user.id.unwrap_or_default()).await;
             user.domaines = self.domaines_by_user_id(&user.id.unwrap_or_default()).await;
-            user.ecoles = self.ecoles_by_user_id(&user.id.unwrap_or_default()).await;
-            user.entreprises = self.entreprises_by_user_id(&user.id.unwrap_or_default()).await;
-            user.langues = self.langues_by_user_id(&user.id.unwrap_or_default()).await;
-            user.localites = self.localites_by_user_id(&user.id.unwrap_or_default()).await;
-            user.specialites = self.specialites_by_user_id(&user.id.unwrap_or_default()).await;
-            user.titres = self.titres_by_user_id(&user.id.unwrap_or_default()).await;
-            user.user_plus_infos = self.user_plus_infos_by_user_id(&user.id.unwrap_or_default()).await;
+            user.ecoles = self.get_ecoles_by_user_id(&user.id.unwrap_or_default()).await;
+            user.entreprises = self.get_entreprises_by_user_id(&user.id.unwrap_or_default()).await;
+            user.langues = self.get_langues_by_user_id(&user.id.unwrap_or_default()).await;
+            user.localites = self.get_localites_by_user_id(&user.id.unwrap_or_default()).await;
+            user.specialites = self.get_specialites_by_user_id(&user.id.unwrap_or_default()).await;
+            user.titres = self.get_titres_by_user_id(&user.id.unwrap_or_default()).await;
+            user.user_plus_infos = self.get_user_plus_infos_by_user_id(&user.id.unwrap_or_default()).await;
         }
 
         users
+    }
+
+    pub(crate) async fn save_query(&self, sql: &str) -> i32 {
+        match sqlx::query_as::<_, RowId>(&sql)
+        .fetch_one(&self.pool)
+        .await 
+        {
+            Ok(res) => {
+                match res.id {
+                    Some(id) => id,
+                    None => 0
+                }
+            },
+            Err(e) => {
+                println!("err in inserting user: {e:#?}");
+                0
+            }
+        }
     }
 }

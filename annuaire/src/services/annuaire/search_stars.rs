@@ -1,5 +1,7 @@
 use common::acteur::Acteur;
-use inter_services_messages::{ResponseData, annuaire::AnnuaireSearchInput};
+use inter_services_messages::{ResponseData, annuaire::{
+    AnnuaireSearchInput
+}};
 use crate::services::DatabaseService;
 
 

@@ -5,8 +5,7 @@ use inter_services_messages::annuaire::{RowId, Domaine};
 
 impl DatabaseService {
 
-    pub(crate) async fn _domaines(&self) -> Vec<Domaine> {
-    
+    pub async fn get_all_domaines(&self) -> Vec<Domaine> {
         match sqlx::query_as::<_, Domaine>(&self.domaines_sql())
         .fetch_all(&self.pool)
         .await 
@@ -21,7 +20,11 @@ impl DatabaseService {
         }
     }
 
-    pub(crate) async fn domaines_by_user_id(&self, user_id: &i32) -> Vec<Domaine> {
+    pub async fn create_domaine(&self, domaine: &Domaine) -> i32 {
+        self.save_query(&self.save_domaine_sql(&domaine)).await
+    }
+
+    pub async fn domaines_by_user_id(&self, user_id: &i32) -> Vec<Domaine> {
         match sqlx::query_as::<_, Domaine>(&self.domaines_by_user_id_sql(&user_id).as_ref())
         .fetch_all(&self.pool)
         .await 
@@ -36,7 +39,7 @@ impl DatabaseService {
         }
     }
 
-    pub(crate) async fn domaines_search_key(&self, key: &str) -> Result<Vec<RowId>, String> {
+    pub async fn domaines_search_key(&self, key: &str) -> Result<Vec<RowId>, String> {
         match sqlx::query_as::<_, RowId>(&self.search_in_table("domaines", &key))
         .fetch_all(&self.pool)
         .await 
@@ -62,5 +65,18 @@ impl DatabaseService {
         join annuaire.user_domaines ud 
         on d.id = ud.id_domaine
         WHERE ud.id_user = {user_id};"#)
+    }
+
+    fn save_domaine_sql(&self, domaine: &Domaine) -> String {
+        format!(r#"
+            insert into annuaire.domaines 
+                (nom, description) 
+            values 
+                ('{}', '{}') 
+            returning id
+        "#,
+        domaine.nom.clone().unwrap_or_default(),
+        domaine.description.clone().unwrap_or_default()
+        )
     }
 }

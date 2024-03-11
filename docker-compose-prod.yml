@@ -1,0 +1,54 @@
+version: "3.9"
+name: pei
+services:
+  annuaire_db:
+    container_name: annuaire_db
+    image: "postgres:15.4"
+    volumes:
+      - ./databases/annuaire:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${ANNUAIRE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ANNUAIRE_POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: annuaire_db
+    networks:
+      net:
+        ipv4_address: 192.168.11.10
+    ports:
+      - "5433:5432"
+  
+  gateway:
+      image: iccbrx/gateway:latest
+      container_name: gateway
+      networks:
+        net:
+          ipv4_address: 192.168.11.12
+      ports:
+        - 4012:4012
+      environment:
+        - GatewayAddress=192.168.11.12:4012
+        - AnnuaireClientAddress=192.168.11.14:4014
+      depends_on:
+        - annuaire
+  
+  annuaire:
+      image: iccbrx/annuaire:latest
+      container_name: annuaire
+      networks:
+        net:
+          ipv4_address: 192.168.11.14
+      ports:
+        - 4014:4014
+      environment:
+        - AnnuaireClientAddress=192.168.11.14:4014
+        - AnnuaireDatabaseAddress=postgres://${ANNUAIRE_POSTGRES_USER}:${ANNUAIRE_POSTGRES_PASSWORD}@annuaire_db:5433/postgres
+      depends_on:
+        - annuaire_db
+
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+          - 
+            subnet: "192.168.11.0/24"

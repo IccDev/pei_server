@@ -4,7 +4,7 @@ use inter_services_messages::annuaire::RowId;
 
 
 impl DatabaseService {
-    pub(crate) async fn user_titres_user_id(&self, msg: &str) -> Vec<RowId> {
+    pub async fn user_titres_user_id(&self, msg: &str) -> Vec<RowId> {
         match sqlx::query_as::<_, RowId>(&self.user_titres_user_id_sql(&msg))
         .fetch_all(&self.pool)
         .await 

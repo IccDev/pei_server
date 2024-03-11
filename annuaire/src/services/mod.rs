@@ -1,4 +1,5 @@
 mod database;
-pub mod annuaire;
+mod annuaire;
 
 pub use database::*;
+pub use annuaire::*;

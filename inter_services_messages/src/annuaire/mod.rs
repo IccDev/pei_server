@@ -10,7 +10,27 @@ use std::hash::{Hash, Hasher};
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(crate = "self::serde")]
 pub enum AnnuaireMessage {
-    Search(AnnuaireSearchInput)
+    Search(AnnuaireSearchInput),
+    CreateUser(User),
+    CreateCampus(Campus),
+    CreateCompetences(Competence),
+    CreateDepartement(Departement),
+    CreateDiplomes(DiplomeCertificat),
+    CreateDomaine(Domaine),
+    CreateEcole(Ecole),
+    CreateEntreprise(Entreprise),
+    CreateLangue(Langue),
+    CreateLocalite(Localite),
+    CreateSpecialite(Specialite),
+    CreateTitre(Titre),
+    CreateUserInfo(UserPlusInfos),
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(crate = "self::serde")]
+pub enum AnnuaireResponse {
+    Search(AnnuaireSearchOutput),
+    Create(i32)
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -26,7 +46,7 @@ pub struct AnnuaireSearchOutput {
     pub data: Vec<User>
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Default)]
 #[serde(crate = "self::serde")]
 pub struct RowId {
     pub id: Option<i32>

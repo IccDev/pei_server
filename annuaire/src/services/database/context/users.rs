@@ -1,13 +1,17 @@
 use crate::services::database::DatabaseService;
 use common::sqlx;
-use inter_services_messages::annuaire::User;
+use inter_services_messages::annuaire::{User, RowId};
 
 impl DatabaseService {
-    pub(crate) async fn users_by_ids(&self, ids: &[i32], filter_campus: &[i32]) -> Vec<User> {
+    pub async fn users_by_ids(&self, ids: &[i32], filter_campus: &[i32]) -> Vec<User> {
         match filter_campus.len() > 0 {
             true => self.users_by_ids_with_church(&ids, &filter_campus).await,
             false => self.users_by_ids_with_no_church(&ids).await
         }
+    }
+
+    pub async fn save_user(&self, user: &User) -> i32 {
+        self.save_query(&self.save_user_sql(&user)).await
     }
 
     async fn users_by_ids_with_no_church(&self, ids: &[i32]) -> Vec<User> {
@@ -61,5 +65,20 @@ impl DatabaseService {
             on u.id = uc.id_user
             WHERE u.id in ({ids}) and uc.id_campus in ({filter_campus});
         "#)
+    }
+
+    fn save_user_sql(&self, user: &User) -> String {
+        format!(r#"
+            insert into annuaire.users 
+                (nom, prenom, photo, consentement_nom) 
+            values 
+                ('{}', '{}', '{}', {}) 
+            returning id
+        "#,
+        user.nom.clone().unwrap_or_default(),
+        user.prenom.clone().unwrap_or_default(),
+        user.photo.clone().unwrap_or_default(),
+        user.consentement_nom.clone().unwrap_or_default(),
+        )
     }
 }

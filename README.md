@@ -31,3 +31,17 @@ docker rm <Container_ID>
 ## Remove docker image
 docker image ls
 sudo docker image rm 93b5085aeb02
+
+## Tag images
+To tag a local image with ID 'ff8a750b2faa' as 'iccbrx/gateway' with the tag 'latest'  
+docker tag b3d760cc1156 iccbrx/gateway:latest
+docker tag 001b11c0c909 iccbrx/annuaire:latest
+
+# change to icc docker hub
+docker login -u myusername -p mypassword docker.io  
+
+docker login -u iccbrx -p IccDev@2023 docker.io 
+
+## Push images
+docker push iccbrx/gateway:latest
+docker push iccbrx/annuaire:latest
