@@ -1,8 +1,0 @@
-[package]
-name = "inter_services_messages"
-version = "0.1.0"
-edition = "2021"
-
-
-[dependencies]
-common = { version = "0.1", path = "../common" }
