@@ -1,0 +1,58 @@
+[
+    {
+        "Profile": {
+            "Nom": "",
+            "Prenom": "",
+            "VilleDeResidence": "",
+            "Photo": ""
+        },
+        "Eglise": {
+            "Nom": "",
+            "Star": "",
+            "Département": ""
+        },
+        "Contact": {
+            "GSM": "",
+            "AdresseMail": ""
+        },
+        "Langues": [
+            {
+                "Nom": ""
+            }
+        ],
+        "Educations": [
+            {
+                "Domaine": "",
+                "Titre": "",
+                "Spécialité": "",
+                "Ecole": "",
+                "Ville": ""
+            }
+        ],
+        "Professions": [
+            {
+                "Domaine": "",
+                "Titre": "",
+                "Spécialité": "",
+                "Entreprise": "",
+                "Ville": ""
+            }
+        ],
+        "Diplômes": [
+            {
+                "Nom": ""
+            }
+        ],
+        "Certifications": [
+            {
+                "Nom": ""
+            }
+        ],
+        "Compétences": [ 
+            {
+                "Nom": "" 
+            }   
+        ],
+        "PlusInfos": ""
+    }
+]

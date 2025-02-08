@@ -16,7 +16,6 @@ impl DatabaseService {
 
     async fn users_by_ids_with_no_church(&self, ids: &[i32]) -> Vec<User> {
         let ids_string: Vec<String> = ids.iter().map(|i| format!("{i}")).collect();
-
         match sqlx::query_as::<_, User>(&self.search_users_ids(&ids_string.as_slice().join(", ")))
         .fetch_all(&self.pool)
         .await 
@@ -25,18 +24,24 @@ impl DatabaseService {
                 res.to_vec()
             },
             Err(e) => {
-                println!("err in users: {e:#?}");
+                println!("err in users no church: {e:#?}");
                 vec![]
             }
         }
     }
 
     fn search_users_ids(&self, ids: &str) -> String {
-        format!(r#"
-            SELECT u.id, u.nom, u.prenom, COALESCE(u.photo, '') as photo, COALESCE(u.consentement_nom, 'false') as consentement_nom
-            FROM annuaire.users u
-            WHERE u.id in ({ids});
-        "#)
+        match ids.is_empty() {
+            true => format!(r#"
+                    SELECT u.id, u.nom, u.prenom, COALESCE(u.photo, '') as photo, COALESCE(u.consentement_nom, false) as consentement_nom
+                    FROM annuaire.users u;
+                "#),
+            false => format!(r#"
+                SELECT u.id, u.nom, u.prenom, COALESCE(u.photo, '') as photo, COALESCE(u.consentement_nom, false) as consentement_nom
+                FROM annuaire.users u
+                WHERE u.id in ({ids});
+            "#)
+        }
     }
 
     async fn users_by_ids_with_church(&self, ids: &[i32], filter_campus: &[i32]) -> Vec<User> {
@@ -51,7 +56,7 @@ impl DatabaseService {
                 res.to_vec()
             },
             Err(e) => {
-                println!("err in users: {e:#?}");
+                println!("err in users church: {e:#?}");
                 vec![]
             }
         }
@@ -59,7 +64,7 @@ impl DatabaseService {
 
     fn search_users_ids_with_church(&self, ids: &str, filter_campus: &str) -> String {
         format!(r#"
-            SELECT u.id, u.nom, u.prenom, COALESCE(u.photo, '') as photo, COALESCE(u.consentement_nom, 'false') as consentement_nom
+            SELECT u.id, u.nom, u.prenom, COALESCE(u.photo, '') as photo, COALESCE(u.consentement_nom, false) as consentement_nom
             FROM annuaire.users u
             join annuaire.user_campus uc 
             on u.id = uc.id_user

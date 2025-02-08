@@ -1,5 +1,5 @@
 use common::{
-    warp::{self, Filter}
+    warp::{self, Filter, hyper::Method}
 };
 use inter_services_messages::annuaire::AnnuaireSearchInput;
 use crate::clients::annuaire_client::*;
@@ -7,6 +7,19 @@ use crate::clients::annuaire_client::*;
 
 
 pub fn routes() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    let cors = warp::cors()
+        .allow_any_origin()
+        .allow_headers(vec![
+            "User-Agent",
+            "Sec-Fetch-Mode",
+            "Referer",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers",
+        ])
+        .allow_methods(&[Method::POST, Method::GET])
+        .build();
+    
     warp::get()
     .and(warp::path!("annuaire" / "search").and(warp::query::<AnnuaireSearchInput>()).then(annuaire_search))
     .or(warp::post().and(warp::path!("annuaire" / "create_usser").and(warp::body::json()).then(annuaire_create_user)))
@@ -22,4 +35,5 @@ pub fn routes() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejecti
     .or(warp::post().and(warp::path!("annuaire" / "create_specialite").and(warp::body::json()).then(annuaire_create_specialite)))
     .or(warp::post().and(warp::path!("annuaire" / "create_titre").and(warp::body::json()).then(annuaire_create_titre)))
     .or(warp::post().and(warp::path!("annuaire" / "create_user_info").and(warp::body::json()).then(annuaire_create_user_info)))
+    .with(cors)
 }

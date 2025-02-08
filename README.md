@@ -3,8 +3,8 @@
 ## Run one specific service  
 cargo run -p service_name
 ### Example  
-cargo run -p icc_gateway
-cargo run -p icc_annuaire
+cargo run -p gateway
+cargo run -p annuaire
 
 ## docker
 sudo docker pull djedou/icc_gateway:v_0.3.2
