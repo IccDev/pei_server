@@ -1,0 +1,36 @@
+
+mod adresses_composants;
+mod adresses;
+mod composants;
+mod consentements;
+mod departements;
+mod eglise_departements;
+mod eglises;
+mod infos_composants;
+mod infos_qualifications;
+mod langues;
+mod parcours;
+mod profiles;
+mod qualifications;
+mod result_search;
+mod user_departements;
+mod user_langues;
+mod get_infos_to_create_user;
+
+pub use adresses_composants::*;
+pub use adresses::*;
+pub use composants::*;
+pub use consentements::*;
+pub use departements::*;
+pub use eglise_departements::*;
+pub use eglises::*;
+pub use infos_composants::*;
+pub use infos_qualifications::*;
+pub use langues::*;
+pub use parcours::*;
+pub use profiles::*;
+pub use qualifications::*;
+pub use result_search::*;
+pub use user_departements::*;
+pub use user_langues::*;
+pub use get_infos_to_create_user::*;

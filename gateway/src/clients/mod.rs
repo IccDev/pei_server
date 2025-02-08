@@ -1,1 +1,3 @@
-pub mod annuaire_client;
+mod annuaire_client;
+
+pub(crate) use annuaire_client::*;

@@ -1,0 +1,13 @@
+DROP TABLE public.user_departements;
+DROP TABLE public.user_langues;
+DROP TABLE public.infos_composants;
+DROP TABLE public.adresses_composants;
+DROP TABLE public.infos_qualifications;
+DROP TABLE public.consentements;
+DROP TABLE public.parcours;
+DROP TABLE public.composants;
+DROP TABLE public.departements;
+DROP TABLE public.langues;
+DROP TABLE public.qualifications;
+DROP TABLE public.profiles;
+DROP TABLE public.eglise_departements;

@@ -1,0 +1,74 @@
+################
+##### Builder (check latest version on rust and put it here)
+FROM rust:alpine as builder
+
+WORKDIR /usr/src
+
+# Create blank project
+RUN mkdir -p /usr/src/annuaire
+RUN mkdir -p /usr/src/annuaire/src/
+
+
+# We want dependencies cached, so copy those first.
+COPY Cargo.toml Cargo.lock diesel.toml /usr/src/annuaire/
+COPY src/ /usr/src/annuaire/src/
+
+# Set the working directory
+WORKDIR /usr/src/annuaire
+
+## Install target platform (Cross-Compilation) --> Needed for Alpine
+RUN apk add --no-cache musl-dev libpq-dev git gcc gcompat libstdc++ postgresql-dev
+RUN rustup target add x86_64-unknown-linux-musl
+#RUN apt-get update && apt-get install -y musl-tools musl-dev pkg-config libssl-dev libsecret-1-0 git libpq-dev gcc
+#RUN cargo install diesel_cli --no-default-features --features postgres
+
+
+# This is the actual application build.
+RUN cargo build -p annuaire --target x86_64-unknown-linux-musl --release
+
+
+################
+##### Runtime
+FROM alpine:latest AS annuaire 
+
+# Copy application binary from builder image
+COPY --from=builder /usr/src/annuaire/target/x86_64-unknown-linux-musl/release/annuaire /usr/local/bin
+
+EXPOSE 3030
+
+# Run the application
+CMD ["/usr/local/bin/annuaire"]
+
+
+
+# Rust as the base image
+FROM rust:latest as build
+
+# Create a new empty shell project
+RUN USER=root cargo new --bin holodeck
+WORKDIR /holodeck
+
+# Copy our manifests
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+# Build only the dependencies to cache them
+RUN cargo build --release
+RUN rm src/*.rs
+
+# Copy the source code
+COPY ./src ./src
+
+# Build for release.
+RUN rm ./target/release/deps/holodeck*
+RUN cargo build --release
+
+# The final base image
+FROM debian:buster-slim
+
+# Copy from the previous build
+COPY --from=build /holodeck/target/release/holodeck /usr/src/holodeck
+# COPY --from=build /holodeck/target/release/holodeck/target/x86_64-unknown-linux-musl/release/holodeck .
+
+# Run the binary
+CMD ["/usr/src/holodeck"]

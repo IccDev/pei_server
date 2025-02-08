@@ -5,5 +5,6 @@ edition = "2021"
 
 
 [dependencies]
-common = { version = "0.1", path = "../common" }
-inter_services_messages = { version = "0.1", path = "../inter_services_messages" }
+common_crates = { git = "https://github.com/IccDev/common_crates.git", branch = "develop" }
+#inter_services_messages = { git = "https://github.com/IccDev/inter_services_messages.git", branch = "master" }
+#common_crates = {version = "0.1.0", path = "../common_crates" }

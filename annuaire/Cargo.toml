@@ -3,7 +3,21 @@ name = "annuaire"
 version = "0.1.0"
 edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-common = { version = "0.1", path = "../common" }
-inter_services_messages = { version = "0.1", path = "../inter_services_messages" }
+uuid = { version = "1.10.0", features = ["serde", "v4"] }
+diesel = { version = "2.2.0", features = ["postgres", "chrono", "uuid"] }
+#pg-migrator = { version = "0.2", features = ["postgres"] }
+common_crates = { git = "https://github.com/IccDev/common_crates.git", branch = "develop" }
+dotenvy = "0.15"
+#common_crates = {version = "0.1.0", path = "../common_crates" }
+#inter_services_messages = { git = "https://github.com/IccDev/inter_services_messages.git", branch = "master" }
+#tokio-postgres = "0.7"
+#itertools = "0.13"
+#simsearch = "0.2"
+
+[workspace]
+members = [
+    ".",
+]
