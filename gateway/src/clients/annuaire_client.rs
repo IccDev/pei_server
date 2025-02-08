@@ -1,9 +1,5 @@
 use crate::router::match_request::Params;
-use crate::{
-    //result::GenericError,
-    addresses::annuaire_address
-};
-//use std::convert::Infallible;
+use crate::addresses::annuaire_address;
 
 
 pub(crate) fn annuaire_client(_params: Params) -> Result<String, String> {

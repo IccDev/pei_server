@@ -10,6 +10,13 @@ pub(crate) fn gateway_address<'a>() -> SocketAddr {
     }
 }
 
+pub(crate) fn mjib_address<'a>() -> SocketAddr {
+    match env::var("MjibAddress") {
+        Ok(a) => SocketAddr::from_str(&a).expect("No able to parse address!"),
+        Err(_) => SocketAddr::from_str("127.0.0.1:4014").expect("No able to parse address!")
+    }
+}
+
 pub(crate) fn gateway_key<'a>() -> String {
     match env::var("GatewayKey") {
         Ok(a) => a,

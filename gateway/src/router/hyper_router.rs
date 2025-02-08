@@ -34,6 +34,11 @@ pub async fn router(path: &str, method: Method) -> String {
             POST => crate::route_handler!(annuaire_client),
             OPTIONS => crate::route_handler!(annuaire_client),
         },
+        "/mjib/*" => {
+            GET => crate::route_handler!(mjib_client), 
+            POST => crate::route_handler!(mjib_client),
+            OPTIONS => crate::route_handler!(mjib_client),
+        },
         "/*" => {
             POST => crate::route_handler!(unknowed_route),
             GET => crate::route_handler!(unknowed_route),
