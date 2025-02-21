@@ -7,3 +7,10 @@ edition = "2021"
 
 [dependencies]
 common_crates = { git = "https://github.com/IccDev/common_crates.git", branch = "develop" }
+
+[profile.release]
+lto = true
+strip = true
+opt-level = 3
+panic = 'abort'
+codegen-units = 1

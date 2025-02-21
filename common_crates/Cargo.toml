@@ -6,11 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net"]}
+tokio = {version = "1.26", features = ["macros", "rt-multi-thread", "rt", "net", "macros"]}
 tracing = "0.1.26"
 tracing-subscriber = "0.3.1"
 #remoc = { version = "0.13", features = ["rch"] }
-#acteur = "0.12"
 #rayon = "1.8"
 #sqlx = { version = "0.7", features = ["postgres", "runtime-async-std-rustls", "time"]}
 async-trait = "0.1"
@@ -31,3 +30,5 @@ tls-listener = {version = "0.10", features = ["rustls-core"]}
 tokio-rustls = {version = "0.26"}
 rustls-pemfile = "2.2"
 rustls = "0.23"
+surrealdb = {version = "2.2", features = ["protocol-ws"]}
+dotenv = "0.15"
