@@ -1,6 +1,6 @@
 ################
 ##### Builder (check latest version on rust and put it here)
-FROM rust:1.78.0-slim as builder
+FROM rust:1.81.0-slim as builder
 
 WORKDIR /usr/src
 

@@ -5,3 +5,4 @@
 /databases
 DockerSecretREADME.md
 /old_to_remove
+.env

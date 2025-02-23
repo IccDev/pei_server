@@ -9,7 +9,9 @@ use super::{
     err
 };
 use crate::{
-    match_request
+    match_request,
+    routes::*,
+    addresses::gateway_ip
 };
 
 
@@ -37,6 +39,66 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
     let method = req.method();
     let path = req.uri().path();
     match match_request!(method, path, {
+        "/mjib/query/user/all" => {
+            GET => crate::route_handler!(query_users_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/role/all" => {
+            GET => crate::route_handler!(query_roles_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/church/all" => {
+            GET => crate::route_handler!(query_churches_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/city/all" => {
+            GET => crate::route_handler!(query_cities_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/country/all" => {
+            GET => crate::route_handler!(query_countries_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/signup" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(signup_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/signin" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(signin_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/user/:user_id" => {
+            GET => crate::route_handler!(signin_user_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/roles" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_roles_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/churches" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_churches_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/cities" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_cities_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/countries" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_countries_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
         "/mjib/*" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(unknowed_route),

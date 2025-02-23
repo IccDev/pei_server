@@ -1,6 +1,6 @@
 ################
 ##### Builder (check latest version on rust and put it here)
-FROM rust:1.78.0-slim as builder
+FROM rust:1.85.0-slim as builder
 
 WORKDIR /usr/src
 
@@ -22,8 +22,7 @@ RUN apt update && apt install -y musl-tools musl-dev pkg-config libssl-dev libse
 
 
 # This is the actual application build.
-RUN cargo build -p mjib --target x86_64-unknown-linux-musl --release
-#RUN cargo build -p mjib --target x86_64-unknown-linux-musl --release
+RUN cargo build --target x86_64-unknown-linux-musl --release
 
 
 ################

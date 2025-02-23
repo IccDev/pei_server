@@ -1,4 +1,7 @@
 pub mod router;
+mod addresses;
+pub mod database;
+pub mod routes;
 
 use std::env;
 use common_crates::{
@@ -8,22 +11,29 @@ use common_crates::{
     hyper::{
         service::service_fn,
         server::conn::http1,
+        Request, 
+        body::Incoming as IncomingBody
     },
-    hyper_util::rt::tokio::TokioIo
+    hyper_util::rt::tokio::TokioIo,
+    dotenv::dotenv
 };
 use router::router;
+use self::addresses::mjib_address;
+use crate::database::DBService;
+use std::sync::LazyLock;
 
 
+
+static DB: LazyLock<DBService> = LazyLock::new(DBService::init);
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
     let subscriber = FmtSubscriber::new();
     set_global_default(subscriber).unwrap();
+    DB.connect().await;
 
-    let address = match env::var("MjibAddress") {
-        Ok(a) => a,
-        Err(_) => String::from("127.0.0.1:4014")
-    };
+    let address = mjib_address();
     info!("Server: http://{}", address);
 
     // Listen for incoming TCP connection.
@@ -33,7 +43,6 @@ async fn main() {
         match listener.accept().await {
             Ok((stream, _)) => {
                 let io = TokioIo::new(stream);
-        
                 tokio::task::spawn(async move {
                     let service = service_fn(router);
         
