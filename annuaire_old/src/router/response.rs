@@ -1,23 +1,13 @@
 use common_crates::{
-    hyper::{Request, Response, body::Incoming as IncomingBody, StatusCode},
-    serde_json::json
+    hyper::{body::Bytes, Response, StatusCode},
+    serde_json::json,
+    http_body_util::combinators::BoxBody
 };
-use super::{BoxedBody, match_request::Params};
+use std::convert::Infallible;
 
-pub(crate) async fn unknowed_route(_req: Request<IncomingBody>, _params: Params) -> Response<BoxedBody> {
-    Response::builder()
-        .status(StatusCode::NOT_FOUND)
-        .header("Content-Type", "application/json")
-        .header("Accept", "application/json")
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Origin", "*")
-        .header("Access-Control-Allow-Headers", "*")
-        .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-        .body(BoxedBody::new(json!({"error": "Route Not Found!"}).to_string()))
-        .unwrap()
-}
+pub type BoxedBody = BoxBody<Bytes, Infallible /*GenericError*/>;
 
-pub(crate) async fn preflight(_req: Request<IncomingBody>, _params: Params) -> Response<BoxedBody> {
+pub(crate) fn ok(body: BoxedBody) -> Response<BoxedBody> {
     Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
@@ -26,6 +16,19 @@ pub(crate) async fn preflight(_req: Request<IncomingBody>, _params: Params) -> R
         .header("Origin", "*")
         .header("Access-Control-Allow-Headers", "*")
         .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-        .body(BoxedBody::new(json!("").to_string()))
+        .body(body)
+        .unwrap()
+}
+
+pub(crate) fn err(msg: &str) -> Response<BoxedBody> {
+    Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .header("Accept", "application/json")
+        .header("Access-Control-Allow-Origin", "*")
+        .header("Origin", "*")
+        .header("Access-Control-Allow-Headers", "*")
+        .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+        .body(BoxedBody::new(json!({"error": msg}).to_string()))
         .unwrap()
 }

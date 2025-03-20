@@ -1,8 +1,8 @@
-pub mod router;
-mod addresses;
 pub mod database;
-pub mod routes;
-
+pub mod router;
+pub mod models;
+pub mod schema;
+//mod clients;
 use std::env;
 use common_crates::{
     tracing::{info, subscriber::set_global_default},
@@ -11,29 +11,35 @@ use common_crates::{
     hyper::{
         service::service_fn,
         server::conn::http1,
-        Request, 
-        body::Incoming as IncomingBody
     },
-    hyper_util::rt::tokio::TokioIo,
-    dotenv::dotenv
+    hyper_util::rt::tokio::TokioIo
 };
 use router::router;
-use self::addresses::annuaire_address;
-use crate::database::DBService;
-use std::sync::LazyLock;
+use diesel::prelude::*;
+//use dotenvy::dotenv;
 
 
+pub fn establish_connection() -> PgConnection {
+    //dotenv().ok();
 
-static DB: LazyLock<DBService> = LazyLock::new(DBService::init);
+    let database_url = match env::var("AnnuaireDatabaseAddress") {
+        Ok(a) => a,
+        Err(_) => String::from("postgres://icc_admin:icc_admin_2023@127.0.0.1:5434/postgres")
+    };
+    PgConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+}
+
 
 #[tokio::main]
 async fn main() {
-    dotenv().ok();
     let subscriber = FmtSubscriber::new();
     set_global_default(subscriber).unwrap();
-    DB.connect().await;
 
-    let address = annuaire_address();
+    let address = match env::var("AnnuaireAddress") {
+        Ok(a) => a,
+        Err(_) => String::from("127.0.0.1:4013")
+    };
     info!("Server: http://{}", address);
 
     // Listen for incoming TCP connection.
@@ -43,6 +49,7 @@ async fn main() {
         match listener.accept().await {
             Ok((stream, _)) => {
                 let io = TokioIo::new(stream);
+        
                 tokio::task::spawn(async move {
                     let service = service_fn(router);
         

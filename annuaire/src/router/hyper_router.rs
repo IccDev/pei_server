@@ -10,7 +10,9 @@ use super::{
 };
 use crate::{
     match_request,
-    database::*
+    routes::*,
+    addresses::gateway_ip,
+    router::preflight
 };
 
 
@@ -38,69 +40,32 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
     let method = req.method();
     let path = req.uri().path();
     match match_request!(method, path, {
-        "/annuaire/eglises" => {
-            GET => crate::route_handler!(annuaire_get_eglises), 
-            POST => crate::route_handler!(unknowed_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
-        },
-        "/annuaire/get_infos_to_create_user" => {
-            GET => crate::route_handler!(get_infos_to_create_user), 
-            POST => crate::route_handler!(unknowed_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
-        },
-        "/annuaire/create_eglises" => {
-            GET => crate::route_handler!(unknowed_route), 
-            POST => crate::route_handler!(annuaire_create_eglises),
-            OPTIONS => crate::route_handler!(unknowed_route),
-        },
-        /*
-        "/annuaire/search" => {
-            GET => crate::route_handler!(annuaire_search), 
-            POST => crate::route_handler!(unknowed_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
-        },
-        "/annuaire/create_user" => {
-            GET => crate::route_handler!(unknowed_route), 
-            POST => crate::route_handler!(annuaire_create_user),
-            OPTIONS => crate::route_handler!(annuaire_create_user),
-        },
-        "/annuaire/get_infos_to_create_user" => {
-            GET => crate::route_handler!(annuaire_get_infos_to_create_user), 
-            POST => crate::route_handler!(unknowed_route), 
-            OPTIONS => crate::route_handler!(annuaire_get_infos_to_create_user),
-        },
-        "/annuaire/get_user_by_id/:user_id" => {
-            GET => crate::route_handler!(annuaire_get_user_by_id), 
-            POST => crate::route_handler!(unknowed_route), 
-            OPTIONS => crate::route_handler!(annuaire_get_user_by_id),
-        },
-        "/annuaire/create_eglises" => {
-            GET => crate::route_handler!(unknowed_route), 
-            POST => crate::route_handler!(annuaire_create_eglises),
-            OPTIONS => crate::route_handler!(annuaire_create_eglises),
-        },
-        "/annuaire/create_departements" => {
-            POST => crate::route_handler!(annuaire_create_departements), 
-            GET => crate::route_handler!(unknowed_route), 
-            OPTIONS => crate::route_handler!(annuaire_create_departements),
-        },
-        "/annuaire/create_langues" => {
+        "/annuaire/create/user" => {
+            POST => crate::route_handler!(create_user_route),
             GET => crate::route_handler!(unknowed_route),
-            POST => crate::route_handler!(annuaire_create_langues),
-            OPTIONS => crate::route_handler!(annuaire_create_langues),
+            OPTIONS => crate::route_handler!(preflight),
         },
-        "/annuaire/create_certificats" => {
-            GET => crate::route_handler!(unknowed_route),
-            POST => crate::route_handler!(annuaire_create_certificats),
-            OPTIONS => crate::route_handler!(annuaire_create_certificats),
+        "/annuaire/query/users/:key/:church" => {
+            POST => crate::route_handler!(unknowed_route),
+            GET => crate::route_handler!(query_users_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
         },
-        "/annuaire/link_eglise_departements" => {
-            GET => crate::route_handler!(unknowed_route),
-            POST => crate::route_handler!(link_eglise_departements),
-            OPTIONS => crate::route_handler!(link_eglise_departements),
+        "/annuaire/query/user/:id/contact" => {
+            POST => crate::route_handler!(unknowed_route),
+            GET => crate::route_handler!(query_user_to_contact_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
         },
-        */
-        "/" => {
+        "/annuaire/query/user/:id" => {
+            POST => crate::route_handler!(unknowed_route),
+            GET => crate::route_handler!(query_user_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/annuaire/query/all/churches" => {
+            POST => crate::route_handler!(unknowed_route),
+            GET => crate::route_handler!(query_churches_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/*" => {
             POST => crate::route_handler!(unknowed_route),
             GET => crate::route_handler!(unknowed_route),
             OPTIONS => crate::route_handler!(unknowed_route),

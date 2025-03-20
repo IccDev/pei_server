@@ -6,12 +6,13 @@ use super::{
     unknowed_route,
     BoxedBody,
     match_request::Params,
-    err
+    err,
+    preflight
 };
 use crate::{
     match_request,
     routes::*,
-    addresses::gateway_ip
+    addresses::gateway_ip,
 };
 
 
@@ -67,12 +68,12 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
         "/mjib/signup" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(signup_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/signin" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(signin_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/user/:user_id" => {
             GET => crate::route_handler!(signin_user_route), 
@@ -82,22 +83,22 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
         "/mjib/create/roles" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(create_roles_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/create/churches" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(create_churches_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/create/cities" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(create_cities_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/create/countries" => {
             GET => crate::route_handler!(unknowed_route), 
             POST => crate::route_handler!(create_countries_route),
-            OPTIONS => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/*" => {
             GET => crate::route_handler!(unknowed_route), 

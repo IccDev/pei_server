@@ -1,33 +1,37 @@
-# Rust as the base image
-FROM rust:latest as build
+################
+##### Builder (check latest version on rust and put it here)
+FROM rust:1.85.0-slim as builder
 
-# Create a new empty shell project
-RUN USER=root cargo new --bin annuaire
-WORKDIR /annuaire
+WORKDIR /usr/src
 
-# Copy our manifests
-COPY ./Cargo.lock ./Cargo.lock
-COPY ./Cargo.toml ./Cargo.toml
-COPY ./diesel.toml ./diesel.toml
+# Create blank project
+RUN mkdir -p /usr/src/annuaire
+RUN mkdir -p /usr/src/annuaire/src/
 
-RUN apt-get update && apt-get install -y musl-dev libpq-dev git gcc libpq-dev
-# Build only the dependencies to cache them
-RUN cargo build --release
-RUN rm src/*.rs
 
-# Copy the source code
-COPY ./src ./src
+# We want dependencies cached, so copy those first.
+COPY Cargo.toml Cargo.lock /usr/src/annuaire/
+COPY src/ /usr/src/annuaire/src/
 
-# Build for release.
-RUN rm ./target/release/deps/annuaire*
-RUN cargo build --release
+# Set the working directory
+WORKDIR /usr/src/annuaire
 
-# The final base image
-FROM debian:buster-slim AS annuaire
+## Install target platform (Cross-Compilation) --> Needed for Alpine
+RUN rustup target add x86_64-unknown-linux-musl
+RUN apt update && apt install -y musl-tools musl-dev pkg-config libssl-dev libsecret-1-0 git
 
-# Copy from the previous build
-COPY --from=build /annuaire/target/release/annuaire /usr/src/annuaire
-# COPY --from=build /holodeck/target/release/holodeck/target/x86_64-unknown-linux-musl/release/holodeck .
 
-# Run the binary
-CMD ["/usr/src/annuaire"]
+# This is the actual application build.
+RUN cargo build --target x86_64-unknown-linux-musl --release
+
+
+################
+##### Runtime
+FROM alpine:latest AS annuaire 
+
+# Copy application binary from builder image
+COPY --from=builder /usr/src/annuaire/target/x86_64-unknown-linux-musl/release/annuaire /usr/local/bin
+
+
+# Run the application
+CMD ["/usr/local/bin/annuaire"]

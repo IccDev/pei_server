@@ -16,16 +16,3 @@ pub(crate) async fn unknowed_route(_req: Request<IncomingBody>, _params: Params)
         .body(BoxedBody::new(json!({"error": "Route Not Found!"}).to_string()))
         .unwrap()
 }
-
-pub(crate) async fn preflight(_req: Request<IncomingBody>, _params: Params) -> Response<BoxedBody> {
-    Response::builder()
-        .status(StatusCode::OK)
-        .header("Content-Type", "application/json")
-        .header("Accept", "application/json")
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Origin", "*")
-        .header("Access-Control-Allow-Headers", "*")
-        .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-        .body(BoxedBody::new(json!("").to_string()))
-        .unwrap()
-}
