@@ -40,6 +40,26 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
     let method = req.method();
     let path = req.uri().path();
     match match_request!(method, path, {
+        "/mjib/query/branches" => {
+            GET => crate::route_handler!(query_branches_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/annee_academique" => {
+            GET => crate::route_handler!(query_annee_academique_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/disciplines" => {
+            GET => crate::route_handler!(query_discipline_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/query/cours" => {
+            GET => crate::route_handler!(query_cours_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
         "/mjib/query/user/all" => {
             GET => crate::route_handler!(query_users_route), 
             POST => crate::route_handler!(unknowed_route),
@@ -79,6 +99,28 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
             GET => crate::route_handler!(signin_user_route), 
             POST => crate::route_handler!(unknowed_route),
             OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/annee_academique" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_annee_academique_route),
+            OPTIONS => crate::route_handler!(preflight),
+        },
+        "/mjib/create/branches" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_branches_route),
+            OPTIONS => crate::route_handler!(preflight),
+        },
+
+        "/mjib/create/cours" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_cours_route),
+            OPTIONS => crate::route_handler!(preflight),
+        },
+
+        "/mjib/create/disciplines" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_discipline_route),
+            OPTIONS => crate::route_handler!(preflight),
         },
         "/mjib/create/roles" => {
             GET => crate::route_handler!(unknowed_route), 

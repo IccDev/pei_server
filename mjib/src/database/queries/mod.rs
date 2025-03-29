@@ -4,6 +4,10 @@ mod query_church;
 mod query_role;
 mod query_user;
 mod signin;
+mod query_cours;
+mod query_discipline;
+mod query_annee_academique;
+mod query_branches;
 
 
 pub use query_country::*;
@@ -12,3 +16,7 @@ pub use query_church::*;
 pub use query_role::*;
 pub use query_user::*;
 pub use signin::*;
+pub use query_cours::*;
+pub use query_discipline::*;
+pub use query_annee_academique::*;
+pub use query_branches::*;

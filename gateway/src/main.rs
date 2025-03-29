@@ -23,7 +23,8 @@ use common_crates::{
         }
     },
     tls_listener::TlsListener,
-    rustls
+    rustls,
+    dotenv::dotenv
 };
 use self::{
     router::router,
@@ -37,6 +38,7 @@ use std::{io, fs::File, sync::Arc};
 
 #[tokio::main]
 async fn main() -> Result<(), GenericError>  {
+    dotenv().ok();
     let subscriber = FmtSubscriber::new();
     set_global_default(subscriber).unwrap();
 

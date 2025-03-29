@@ -3,6 +3,10 @@ mod create_city;
 mod create_church;
 mod create_role;
 mod signup;
+mod create_annee_academique;
+mod create_branche;
+mod create_cours;
+mod create_discipline;
 
 
 pub use create_country::*;
@@ -10,3 +14,7 @@ pub use create_city::*;
 pub use create_church::*;
 pub use create_role::*;
 pub use signup::*;
+pub use create_annee_academique::*;
+pub use create_branche::*;
+pub use create_cours::*;
+pub use create_discipline::*;

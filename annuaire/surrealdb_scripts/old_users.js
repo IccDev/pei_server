@@ -1,0 +1,1848 @@
+-------- Query 1 (942.875µs) --------
+
+[
+	{
+		eglise: {
+			departements: [
+				'',
+				'MDIP'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨0⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: '',
+			genre: '',
+			gsm: '',
+			langues: [],
+			nom: '',
+			photo: '',
+			prenom: '',
+			residence: {
+				pays: '',
+				ville: ''
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Allemand'
+				},
+				{
+					nom: 'Anglais'
+				},
+				{
+					nom: 'Coaching'
+				},
+				{
+					nom: 'Gestion des talents '
+				},
+				{
+					nom: 'Développement organisationnel '
+				},
+				{
+					nom: "Outsourcing et services d'assistance virtuelle"
+				},
+				{
+					nom: 'Création et gestion de programmes de coaching '
+				},
+				{
+					nom: 'Stratégie de marque employeur'
+				},
+				{
+					nom: 'Conseil en gestion des carrières'
+				},
+				{
+					nom: 'Recrutement et sélection'
+				},
+				{
+					nom: 'Développement personnel'
+				},
+				{
+					nom: 'Formation en leadership et gestion d’équipe'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Associate Certified Coach (ACC) - International Coaching Federation'
+				},
+				{
+					nom: 'ACTP Leadership Coaching - TPC Leadership'
+				},
+				{
+					nom: 'Closer (Vente) - Closer Evolution'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Comptabilité',
+					titre: 'OSZ Wirtschaft Berlin, Allemagne'
+				},
+				{
+					domaine: 'Administration des affaires et Entrepreneuriat',
+					titre: 'Joseph Business School Chicago, États-Unis'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Recrutement',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: 'Conseil aux entreprises',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: 'Coaching leadership (personnel et professionnel)',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [],
+			eglise: 'Bruxelles',
+			star: false
+		},
+		id: users:⟨103659765⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'gddelphine@gmail.com',
+			genre: 'Mlle',
+			gsm: '+32488272849',
+			langues: [
+				'Anglais',
+				'Français',
+				'Espagnol',
+				'Néerlandais'
+			],
+			nom: 'Semedo Gomes Da Moura',
+			photo: '',
+			prenom: 'Delphine',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Bruges'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Transport maritime (chez MSC)'
+				},
+				{
+					nom: 'Marketing (événementiel et digital: Adobe package)'
+				},
+				{
+					nom: 'Soins des ongles '
+				},
+				{
+					nom: 'SketchUp'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Licence professionnelle Commerce International '
+				},
+				{
+					nom: 'Certificat prothésiste Ongulaire '
+				},
+				{
+					nom: 'Certificat Décoratrice d’intérieur (CEF formation en ligne)'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'IEE Vincennes Paris 8'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Communication',
+					titre: 'Employé'
+				},
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'DSI',
+				'MJIB'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1155959954⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'jasonvinda@gmail.com',
+			genre: 'Mr',
+			gsm: '',
+			langues: [
+				'Anglais',
+				'Français'
+			],
+			nom: 'Ponda ',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_1228.jpeg?alt=media&token=3c7dbb55-b97a-4f44-853a-a2267bff7ae9',
+			prenom: 'Jason',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Sint-Pieters-Leeuw'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'ServiceNow Administrateur '
+				},
+				{
+					nom: 'HTML'
+				},
+				{
+					nom: 'CSS'
+				},
+				{
+					nom: 'JavaScript '
+				},
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DVA'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1281928575⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'ismaelteta1@gmail.com',
+			genre: 'Mr',
+			gsm: '',
+			langues: [
+				'Français'
+			],
+			nom: 'TETA',
+			photo: '',
+			prenom: 'Ismael ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Etterbeek'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Électronique '
+				},
+				{
+					nom: 'Électricité domestique '
+				},
+				{
+					nom: 'Installation et maintenance du matériel médical'
+				},
+				{
+					nom: 'Discipline '
+				},
+				{
+					nom: 'Determination '
+				},
+				{
+					nom: 'Sens de l’organisation '
+				},
+				{
+					nom: 'Diligence '
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Baccalauréat en électrotechnique '
+				},
+				{
+					nom: 'Bachelier en électronique '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Technique et Industrie',
+					titre: 'Université Libre de Bruxelles '
+				},
+				{
+					domaine: 'Technique et Industrie',
+					titre: 'Université des Montagnes '
+				}
+			],
+			professions: [
+				{
+					domaine: 'Technique et Industrie',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'MGI'
+			],
+			eglise: 'Anvers',
+			star: true
+		},
+		id: users:⟨1389702672⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: true,
+			email: 'hugues.mpululu@gmail.com',
+			genre: 'Mr',
+			gsm: '+32474312675',
+			langues: [
+				'Anglais',
+				'Français',
+				'Néerlandais'
+			],
+			nom: 'Mpululu Biyela',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FHugues%20MPULULU%20BIYELA_Original.jpeg?alt=media&token=2233a0b1-4436-4a4c-a01b-88b228748429',
+			prenom: 'Hugues',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Antwerp'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Transport maritime et Logistique'
+				},
+				{
+					nom: 'Achats (Procurement)'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Ingénieur de Gestion'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'Faculté Universitaire Catholique de Mons (FUCAM)'
+				},
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'Université Laval, Québec, Canada'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Bâtiment et Construction',
+					titre: 'Employé'
+				},
+				{
+					domaine: 'Transport et Logistique',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [],
+			eglise: 'Bruxelles',
+			star: false
+		},
+		id: users:⟨1486494598⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'drgracenzeza@protonmail.com',
+			genre: 'Mme',
+			gsm: '+32474430035',
+			langues: [
+				'Français'
+			],
+			nom: 'Nzeza-Di-Nzeza ',
+			photo: '',
+			prenom: 'Grâce ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Santé mentale '
+				},
+				{
+					nom: 'Nutrition '
+				},
+				{
+					nom: 'Médecine fonctionnelle'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Médecine générale '
+				},
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'UCL'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'Call Center',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1581883562⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'daphneychloeicc@gmail.com',
+			genre: 'Mlle',
+			gsm: '',
+			langues: [
+				'Anglais',
+				'Français'
+			],
+			nom: 'Ngassa',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_6328.jpeg?alt=media&token=34760531-0c47-4354-a0d2-3859c8f926ef',
+			prenom: 'Daphney-Chloé',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Analyse de projet '
+				},
+				{
+					nom: 'Gestion de projet '
+				},
+				{
+					nom: 'Gestion d’équipe'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Ingénieur en informatique & gestion'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Ingénierie en informatique ',
+					titre: 'Polytechnique de Mons '
+				},
+				{
+					domaine: 'Réalité Virtuelle ',
+					titre: 'Massey University'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI',
+				'Soins Pastoraux'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1608377625⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: true,
+			email: 'sabury@gmail.com',
+			genre: 'Mr',
+			gsm: '+32484434056',
+			langues: [
+				'Français'
+			],
+			nom: 'Kasongo ',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FE27E6D84-C926-457A-B8B7-B49011058097.jpeg?alt=media&token=bfb5ef81-b229-47e9-90ba-2d96ba222159',
+			prenom: 'Thaddée ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Buizingen'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'Secrétariat'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1646820395⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'Axel.ahonlonsou@gmail.com',
+			genre: 'Mr',
+			gsm: '',
+			langues: [
+				'Français'
+			],
+			nom: 'Ahonlonsou ',
+			photo: '',
+			prenom: 'Axel',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Négociations'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Sciences politiques'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Sciences politiques ',
+					titre: 'ULB'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Immobilier',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: '',
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'Protocole'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1696618311⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'fellymugisha@gmail.com',
+			genre: 'Mlle',
+			gsm: '+32485338616',
+			langues: [
+				'Anglais',
+				'Français',
+				'Néerlandais'
+			],
+			nom: 'Uwumugisha',
+			photo: '',
+			prenom: 'Felie ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Soins infirmiers '
+				},
+				{
+					nom: 'Prise de sang'
+				},
+				{
+					nom: 'Soins à domicile'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Gegradueerde verpleegkundige'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Santé ',
+					titre: 'Sal lier'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Soins infirmiers',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'Evangelisation',
+				'Intégration'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1714484129⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'mellieingila@gmail.com',
+			genre: 'Mlle',
+			gsm: '0465361174',
+			langues: [
+				'Français'
+			],
+			nom: 'Ingila',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_8624.png?alt=media&token=2be5b0d3-07a1-4882-a365-cd66fe658b0d',
+			prenom: 'Mellie',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Master '
+				},
+				{
+					nom: 'Coach en Nutrition'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Sciences humaines et sociales',
+					titre: 'CNAM FRANCE'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: 'Sciences humaines et sociales',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'Impact Junior'
+			],
+			eglise: 'Nivelles',
+			star: true
+		},
+		id: users:⟨1716913308⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'daphneycontact@gmail.com',
+			genre: 'Mme',
+			gsm: '',
+			langues: [
+				'Français'
+			],
+			nom: 'Pouvez',
+			photo: '',
+			prenom: 'Nguyen ',
+			residence: {
+				pays: 'Algeria',
+				ville: 'Algiers'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'Intégration'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1821957261⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'deotukulu@gmail.com',
+			genre: 'Mr',
+			gsm: '+32465725206',
+			langues: [
+				'Français'
+			],
+			nom: 'Tukulu',
+			photo: '',
+			prenom: 'Deogracias ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Bâtiment et Construction',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: '',
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [],
+			eglise: 'Bruxelles',
+			star: false
+		},
+		id: users:⟨1885450040⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'klodanim@gmail.com',
+			genre: 'Mlle',
+			gsm: '+32477074135',
+			langues: [
+				'Anglais',
+				'Français'
+			],
+			nom: 'Klodanim',
+			photo: '',
+			prenom: 'Daclo',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Nivelles'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Gestion de projet '
+				},
+				{
+					nom: 'Analyse de projets '
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Ingénieur en Informatique '
+				},
+				{
+					nom: 'Scrum Master'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'FPMs'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Entreprenariat',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨1926768614⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'salixnibigira@yahoo.fr',
+			genre: 'Mr',
+			gsm: '+32484215360',
+			langues: [
+				'Français'
+			],
+			nom: 'NIBIGIRA',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2F1000042945.jpg?alt=media&token=1798779d-fe86-4960-81e1-149ecd28ee54',
+			prenom: 'Salix',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: "Gestion d'équipe "
+				},
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Baccalauréat Scientifique '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Informatique de gestion ',
+					titre: 'Institut des Carrières Commerciales'
+				},
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'ULB'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Transport et Logistique',
+					titre: 'Employé'
+				},
+				{
+					domaine: 'Informatique de gestion ',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨2024958096⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'temonono0703@gmail.com',
+			genre: 'Mlle',
+			gsm: '',
+			langues: [
+				'Anglais',
+				'Français',
+				'Néerlandais'
+			],
+			nom: 'Temonono',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_0923.PNG?alt=media&token=c691994a-ddcf-4a49-bdbe-60daa577c45d',
+			prenom: 'Nickel',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Ronse'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: 'Informatique'
+				}
+			],
+			competences: [
+				{
+					nom: 'Comptabilité'
+				},
+				{
+					nom: 'Bureautique '
+				},
+				{
+					nom: 'Coiffure '
+				},
+				{
+					nom: 'Peinture'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Économie et développement '
+				},
+				{
+					nom: 'Gestion des entreprises '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Administration et Législation',
+					titre: 'Haute école en Hainaut'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Administration et Législation',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'DSI',
+				'Dsi',
+				'Dva'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨2044797686⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'monemou.joseph.max@gmail.com',
+			genre: 'Mr',
+			gsm: '0485076619',
+			langues: [
+				'Français'
+			],
+			nom: 'Monemou',
+			photo: '',
+			prenom: 'Josep',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Ruisbroek'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Video',
+					titre: 'Etudiant '
+				},
+				{
+					domaine: '',
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'Impact Ados'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨2075656304⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'johannamuhigana@hotmail.com',
+			genre: 'Mme',
+			gsm: '0473197703',
+			langues: [
+				'Français'
+			],
+			nom: 'Muhigana',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_2808.jpeg?alt=media&token=26164bd5-adb5-4366-bb24-d259dec5cfc9',
+			prenom: 'Johanna',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Tubize'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Master de spécialisation en Psychiatrie de l’enfant et l’adolescent '
+				},
+				{
+					nom: 'Certificat de thérapie pour enfants et adolescents '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Université Libre de Bruxelles (ULB)'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'Impact Célébration',
+				'danse prophétique',
+				'Restauration'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨213732359⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: true,
+			email: 'cassiekimss01@gmail.com',
+			genre: 'Mlle',
+			gsm: '+32496397874',
+			langues: [
+				'Français',
+				'Néerlandais'
+			],
+			nom: 'Mboma',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2Fcassie.png?alt=media&token=d9744f35-981b-4393-9ee4-00411d5f3438',
+			prenom: 'Cassandra',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Mons'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: 'Gagner les âmes pour les Seigneur, musique gospel '
+				}
+			],
+			competences: [
+				{
+					nom: 'Suivi des patients'
+				},
+				{
+					nom: 'Traitement à domicile '
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Encore aux études'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Haute Ecole de Mons'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Santé et Bien être',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨219977914⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'djedouarnaud.aman@gmail.com',
+			genre: 'Mr',
+			gsm: '0465879205',
+			langues: [
+				'Anglais',
+				'Français'
+			],
+			nom: 'Aman',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2F1000022249.jpg?alt=media&token=fa010062-b772-4694-b92a-cf05501ac56e',
+			prenom: 'Djedou',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'NIIT'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'Intégration',
+				'Sainte-cene'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨266789311⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'h.homestyle@yahoo.com',
+			genre: 'Mr',
+			gsm: '0487194630',
+			langues: [
+				'Français'
+			],
+			nom: 'Modest',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG-20241207-WA0003.jpg?alt=media&token=e16f153f-5563-4fe3-8298-992e7f2fd124',
+			prenom: 'Youri',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussegem'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: 'Www.new-home-style.com'
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Decoration ',
+					titre: ''
+				},
+				{
+					domaine: 'Bâtiment ',
+					titre: ''
+				},
+				{
+					domaine: 'Peinture ',
+					titre: ''
+				},
+				{
+					domaine: "Décoration d'intérieur ",
+					titre: ''
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨455959876⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: 'sergenz09@gmail.com',
+			genre: 'Mr',
+			gsm: '+32488813693',
+			langues: [
+				'Français'
+			],
+			nom: 'NGWANZA',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_0847.jpeg?alt=media&token=fd8513ea-46ed-4842-ad7b-a3774c2c9bd8',
+			prenom: 'Serge',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Machelen'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Mater en constructions'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Génie civil - constructions',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Bâtiment et Construction',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'MLR'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨50003288⟩,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: true,
+			email: 'patrickkafu22@gmail.com',
+			genre: 'Mr',
+			gsm: '+32465698116',
+			langues: [
+				'Français'
+			],
+			nom: 'Kafu Bolamba',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2F786252de-27b1-4fce-85b7-45a68cd3dd5d.jpeg?alt=media&token=6cfaa7ff-037a-43a3-96ba-30ca58c31ea3',
+			prenom: 'Pateick',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: 'Économie, gestion financière, fiscalité et analyse financière '
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Master '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'Université de Mons / Université Nanterre La Défense '
+				},
+				{
+					domaine: 'Économie monétaire ',
+					titre: 'Université Protestante au Congo '
+				}
+			],
+			professions: [
+				{
+					domaine: 'Economie et Gestion',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'CCP',
+				'MCDE',
+				'MCM'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨68443508⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: true,
+			email: 'mbambideborah@gmail.com',
+			genre: 'Mme',
+			gsm: '0491914322',
+			langues: [
+				'Français'
+			],
+			nom: 'Mbambi',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2FIMG_1176.jpeg?alt=media&token=5e1f178f-df49-4628-aee7-e34cdf57bfb6',
+			prenom: 'Deborah ',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: '',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Cosmétiques',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'MRH'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨723599937⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'emerine.kabongo@gmail.com',
+			genre: 'Mme',
+			gsm: '0032470088446',
+			langues: [
+				'Français'
+			],
+			nom: 'Kabongo',
+			photo: '',
+			prenom: 'Emerine',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Rebecq-Rognon'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: 'Master en sciences du travail '
+				},
+				{
+					nom: 'Bachelier en Droit'
+				},
+				{
+					nom: 'Certification en gestion de paie et du personnel '
+				}
+			],
+			educations: [
+				{
+					domaine: 'Droit ',
+					titre: 'Haute École EPHEC'
+				},
+				{
+					domaine: 'Sciences du travail ',
+					titre: 'ULB'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Sciences humaines et sociales',
+					titre: 'Employé'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'',
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:⟨944996863⟩,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: true,
+			email: 'donny.mboma@outlook.fr',
+			genre: 'Mr',
+			gsm: '+32494985898',
+			langues: [
+				'Anglais',
+				'Français',
+				'Espagnol'
+			],
+			nom: 'Mboma',
+			photo: 'https://firebasestorage.googleapis.com/v0/b/annuaire-icc-78822.appspot.com/o/photos%2Fdonny%20mboma.jpg?alt=media&token=a35d3e18-2b62-48b4-9162-0284f848b8b5',
+			prenom: 'Donny Samuel',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: "Gagneur d'âmes, évangélisation, gestion de serveurs "
+				}
+			],
+			competences: [
+				{
+					nom: 'Java Spring Boot'
+				},
+				{
+					nom: 'React Native'
+				},
+				{
+					nom: 'Javascript'
+				},
+				{
+					nom: 'Docker & Kubernetes'
+				}
+			],
+			diplomes: [
+				{
+					nom: 'AWS S3'
+				},
+				{
+					nom: 'Sciences informatiques'
+				}
+			],
+			educations: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'Haute Ecole de Namur Liège Luxembourg'
+				},
+				{
+					domaine: "Sciences de l'ingénieur",
+					titre: 'Da Vinci - ECAM'
+				}
+			],
+			professions: [
+				{
+					domaine: 'Informatique et Télécommunication',
+					titre: 'Indépendant'
+				},
+				{
+					domaine: 'Développement web & mobile',
+					titre: 'Indépendant'
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:lyhlfbijy6w4o41hfn1v,
+		personnel: {
+			consentement_email: false,
+			consentement_gsm: false,
+			email: '',
+			genre: '',
+			gsm: '',
+			langues: [],
+			nom: '',
+			photo: '',
+			prenom: '',
+			residence: {
+				pays: '',
+				ville: ''
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: 'Culture',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Bâtiment et Construction',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	},
+	{
+		eglise: {
+			departements: [
+				'DSI'
+			],
+			eglise: 'Bruxelles',
+			star: true
+		},
+		id: users:xicckxq6h6aw660lgpby,
+		personnel: {
+			consentement_email: true,
+			consentement_gsm: false,
+			email: 'arnaud@gmail.com',
+			genre: 'Mr',
+			gsm: '+32465879205',
+			langues: [
+				'Anglais',
+				'Français'
+			],
+			nom: 'AMAN',
+			photo: '',
+			prenom: 'DJEDOU ARNAUD',
+			residence: {
+				pays: 'Belgium',
+				ville: 'Brussels'
+			}
+		},
+		professionnel: {
+			certifications: [
+				{
+					nom: ''
+				}
+			],
+			competences: [
+				{
+					nom: ''
+				}
+			],
+			diplomes: [
+				{
+					nom: ''
+				}
+			],
+			educations: [
+				{
+					domaine: 'Culture',
+					titre: ''
+				}
+			],
+			professions: [
+				{
+					domaine: 'Bâtiment et Construction',
+					titre: 'Etudiant '
+				}
+			]
+		}
+	}
+]
