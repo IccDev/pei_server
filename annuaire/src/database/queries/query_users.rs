@@ -14,9 +14,10 @@ use crate::{
 
 impl DBService {
     pub async fn query_users(&self, key: String, church: String) -> Response<BoxedBody> {
+        let key_lowercase = key.to_lowercase();
         let query = match &church == "toutes" {
-            true => query_without_church(&key),
-            false => query_with_church(&key, &church)
+            true => query_without_church(&key_lowercase),
+            false => query_with_church(&key_lowercase, &church)
         };
         
         match DB.db.query(&query).await {
