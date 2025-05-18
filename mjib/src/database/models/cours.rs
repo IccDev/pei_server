@@ -17,6 +17,7 @@ pub struct CoursRow {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "self::serde")]
 pub struct Cours {
+    pub id: RecordId,
     pub name: String,
     pub location: String,
     pub description: String

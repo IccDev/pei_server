@@ -7,6 +7,7 @@ mod annee_academique;
 mod branche;
 mod cours;
 mod discipline;
+mod user_branches;
 
 
 
@@ -19,3 +20,4 @@ pub use annee_academique::*;
 pub use branche::*;
 pub use cours::*;
 pub use discipline::*;
+pub use user_branches::*;

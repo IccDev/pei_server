@@ -40,6 +40,11 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
     let method = req.method();
     let path = req.uri().path();
     match match_request!(method, path, {
+        "/annuaire/update/user/:user_id" => {
+            POST => crate::route_handler!(update_user_route),
+            GET => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(preflight),
+        },
         "/annuaire/create/user" => {
             POST => crate::route_handler!(create_user_route),
             GET => crate::route_handler!(unknowed_route),

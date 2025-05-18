@@ -7,6 +7,7 @@ mod create_annee_academique;
 mod create_branche;
 mod create_cours;
 mod create_discipline;
+mod create_user_branches;
 
 
 pub use create_country::*;
@@ -18,3 +19,4 @@ pub use create_annee_academique::*;
 pub use create_branche::*;
 pub use create_cours::*;
 pub use create_discipline::*;
+pub use create_user_branches::*;

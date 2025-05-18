@@ -40,6 +40,16 @@ pub async fn router(req: Request<IncomingBody>) -> Result<Response<BoxedBody>> {
     let method = req.method();
     let path = req.uri().path();
     match match_request!(method, path, {
+        "/mjib/query/branches_by_user/:user_id" => {
+            GET => crate::route_handler!(query_branches_user_id_route), 
+            POST => crate::route_handler!(unknowed_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
+        "/mjib/create/inscription" => {
+            GET => crate::route_handler!(unknowed_route), 
+            POST => crate::route_handler!(create_user_branches_route),
+            OPTIONS => crate::route_handler!(unknowed_route),
+        },
         "/mjib/query/branches" => {
             GET => crate::route_handler!(query_branches_route), 
             POST => crate::route_handler!(unknowed_route),

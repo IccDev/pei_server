@@ -8,7 +8,7 @@ mod query_cours;
 mod query_discipline;
 mod query_annee_academique;
 mod query_branches;
-
+mod query_branches_by_user;
 
 pub use query_country::*;
 pub use query_city::*;
@@ -20,3 +20,4 @@ pub use query_cours::*;
 pub use query_discipline::*;
 pub use query_annee_academique::*;
 pub use query_branches::*;
+pub use query_branches_by_user::*;
