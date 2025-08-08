@@ -17,6 +17,8 @@ DEFINE FIELD is_active ON user TYPE bool;
 DEFINE FIELD last_login ON user TYPE datetime;
 DEFINE FIELD created_at ON user TYPE datetime;
 DEFINE FIELD updated_at ON user TYPE datetime;
+DEFINE FIELD age_id ON user TYPE record;
+DEFINE FIELD professional_status_id ON user TYPE record;
 
 DEFINE INDEX email ON user FIELDS email UNIQUE;
 

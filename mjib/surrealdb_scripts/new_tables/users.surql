@@ -1,0 +1,17 @@
+USE NS icc DB mjib;
+DEFINE TABLE users SCHEMAFULL;
+DEFINE FIELD emailAddress ON TABLE users TYPE string;
+DEFINE FIELD passWord ON TABLE users TYPE string;
+DEFINE FIELD createdFrom ON TABLE users TYPE datetime;
+DEFINE FIELD dateUpdatedPassword ON TABLE users TYPE datetime;
+DEFINE FIELD firstName ON TABLE users TYPE string;
+DEFINE FIELD name ON TABLE users TYPE string;
+DEFINE FIELD birthDay ON TABLE users TYPE datetime;
+DEFINE FIELD phoneNumber ON TABLE users TYPE string;
+DEFINE FIELD residenceCity ON TABLE users TYPE string;
+DEFINE FIELD residenceCountry ON TABLE users TYPE string;
+DEFINE FIELD prayerAssembly ON TABLE users TYPE record<>;
+DEFINE FIELD profile ON TABLE users TYPE record<>;
+DEFINE FIELD professionalStatus ON TABLE users TYPE record<>;
+DEFINE FIELD comments ON TABLE profile TYPE string;
+DEFINE FIELD flagdeletion ON TABLE profile TYPE 'No' | 'Yes';
