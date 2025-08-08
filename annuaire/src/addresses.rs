@@ -14,7 +14,7 @@ pub(crate) fn annuaire_address() -> String {
 pub(crate) fn annuaire_db_address() -> String {
     match env::var("AnnuaireDatabaseAddress") {
         Ok(a) => a,
-        Err(_) =>  String::from("127.0.0.1:8099")
+        Err(_) =>  String::from("84.234.16.224:8199")
     }
 }
 

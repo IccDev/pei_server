@@ -46,18 +46,19 @@ fn query_without_church(key: &str) -> String {
         professionnel.professions as professions
         from users
         where (
-        array::any(eglise.departements, |$s| $s.lowercase().contains('{key}'))
-        or array::any(professionnel.certifications, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.competences, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.diplomes, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.educations, |$s| (
-        $s.domaine.lowercase().contains('{key}')
-        or $s.titre.lowercase().contains('{key}'))
-        )
-        or array::any(professionnel.professions, |$s| (
-        $s.domaine.lowercase().contains('{key}')
-        or $s.titre.lowercase().contains('{key}'))
-        ));"#)
+            array::any(eglise.departements, |$s| $s.lowercase().contains('{key}'))
+            or array::any(professionnel.certifications, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.competences, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.diplomes, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.educations, |$s| (
+                (if $s.domaine is none then {{false}} else {{$s.domaine.lowercase().contains('{key}')}} end) 
+                or (if $s.titre is none then {{false}} else {{$s.titre.lowercase().contains('{key}')}} end))
+            )
+            or array::any(professionnel.professions, |$s| (
+                (if $s.domaine is none then {{false}} else {{$s.domaine.lowercase().contains('{key}')}} end) 
+                or (if $s.titre is none then {{false}} else {{$s.titre.lowercase().contains('{key}')}} end))
+            )
+        );"#)
 }
 
 
@@ -71,16 +72,17 @@ fn query_with_church(key: &str, church: &str) -> String {
         from users
         where eglise.eglise.lowercase().contains('{church}')
         and (
-        array::any(eglise.departements, |$s| $s.lowercase().contains('{key}'))
-        or array::any(professionnel.certifications, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.competences, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.diplomes, |$s| $s.nom.lowercase().contains('{key}'))
-        or array::any(professionnel.educations, |$s| (
-        $s.domaine.lowercase().contains('{key}')
-        or $s.titre.lowercase().contains('{key}'))
-        )
-        or array::any(professionnel.professions, |$s| (
-        $s.domaine.lowercase().contains('{key}')
-        or $s.titre.lowercase().contains('{key}'))
-        ));"#)
+            array::any(eglise.departements, |$s| $s.lowercase().contains('{key}'))
+            or array::any(professionnel.certifications, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.competences, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.diplomes, |$s| if $s.nom is none then {{false}} else {{$s.nom.lowercase().contains('{key}')}} end)
+            or array::any(professionnel.educations, |$s| (
+                (if $s.domaine is none then {{false}} else {{$s.domaine.lowercase().contains('{key}')}} end) 
+                or (if $s.titre is none then {{false}} else {{$s.titre.lowercase().contains('{key}')}} end))
+            )
+            or array::any(professionnel.professions, |$s| (
+                (if $s.domaine is none then {{false}} else {{$s.domaine.lowercase().contains('{key}')}} end) 
+                or (if $s.titre is none then {{false}} else {{$s.titre.lowercase().contains('{key}')}} end))
+            )
+        );"#)
 }
