@@ -20,7 +20,10 @@ pub struct AnnuaireSearch {
 #[serde(crate = "self::serde")]
 pub struct Profession {
     domaine: Option<String>,
-    titre: Option<String>
+    titre: Option<String>,
+    periode_debut: Option<String>,
+    periode_fin: Option<String>,
+    task: Option<String>
 }
 
 
@@ -90,6 +93,9 @@ pub struct Education {
     pub domaine: Option<String>,
     pub titre: Option<String>,
     pub specialite: Option<String>,
+    pub periode_debut: Option<String>,
+    pub periode_fin: Option<String>,
+    pub competences_acquises: Option<String>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
