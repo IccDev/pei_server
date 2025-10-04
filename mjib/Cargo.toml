@@ -1,16 +1,12 @@
+
 [package]
 name = "mjib"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-common_crates = { git = "https://github.com/IccDev/common_crates.git", branch = "master" }
-
-[profile.release]
-lto = true
-strip = true
-opt-level = 3
-panic = 'abort'
-codegen-units = 1
+tokio = {version = "1", features = ["full"]}
+warp = "0.4"
+pretty_env_logger = "0.5"
+dotenv = "0.15"
+diesel = { version = "2.2.0", features = ["postgres"] }
