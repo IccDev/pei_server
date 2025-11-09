@@ -1,7 +1,10 @@
 use diesel::{result::Error, Connection, PgConnection};
 use std::{env, sync::{Mutex, MutexGuard}};
-use crate::models::{Section, CreateSection, UpdateSection, Discipline, DisciplineData, UpdateDiscipline, CreateDiscipline};
-use crate::schema::{self, sections::dsl::sections, disciplines::dsl::disciplines};
+use crate::models::{
+    Section, CreateSection, UpdateSection, Discipline, DisciplineData, 
+    UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse
+};
+use crate::schema::{self, sections::dsl::sections, disciplines::dsl::disciplines, courses::dsl::courses};
 use crate::diesel::{ExpressionMethods, RunQueryDsl, QueryDsl, associations::HasTable, JoinOnDsl, BoolExpressionMethods};
 use chrono::{Utc, DateTime, NaiveDateTime};
 
@@ -20,6 +23,11 @@ pub trait Database<'a> {
     fn get_discipline_by_id(&'a self, id: i32) -> Result<DisciplineData, Error>;
     fn get_discipline_by_section_id(&'a self, id: i32) -> Result<Vec<DisciplineData>, Error>;
     fn get_disciplines(&'a self) -> Result<Vec<DisciplineData>, Error>;
+    // Course
+    fn create_course(&'a self, course: CreateCourse) -> Result<i32, Error>;
+    fn update_course(&'a self, course: UpdateCourse) -> Result<Course, Error>;
+    fn get_course_by_id(&'a self, id: i32) -> Result<Course, Error>;
+    fn get_courses(&'a self) -> Result<Vec<Course>, Error>;
 }
 
 
@@ -154,5 +162,43 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
                 created_at: disc.created_at,
                 updated_at: disc.updated_at
             }).collect::<_>())
+    }
+
+    fn create_course(&'a self, course: CreateCourse) -> Result<i32, Error> {
+        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+        diesel::insert_into(courses::table())
+            .values(&course)
+            .returning(schema::courses::id)
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn update_course(&'a self, course: UpdateCourse) -> Result<Course, Error> {
+        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+        let utc: DateTime<Utc> = Utc::now();
+        let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
+
+        diesel::update(schema::courses::dsl::courses.filter(schema::courses::id.eq(course.id)))
+            .set((
+                schema::courses::name.eq(course.name), 
+                schema::courses::comment.eq(course.comment), 
+                schema::courses::start_date.eq(course.start_date), 
+                schema::courses::end_date.eq(course.end_date), 
+                schema::courses::video_link.eq(course.video_link), 
+                schema::courses::updated_at.eq(dt)
+            ))
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn get_course_by_id(&'a self, id: i32) -> Result<Course, Error> {
+        let mut db = self.access();
+        schema::courses::dsl::courses
+            .filter(schema::courses::id.eq(id))
+            .first::<Course>(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn get_courses(&'a self) -> Result<Vec<Course>, Error> {
+        let mut db = self.access();
+        schema::courses::dsl::courses
+            .load::<Course>(db.connection.as_mut().expect("No connection initiated!"))
     }
 }

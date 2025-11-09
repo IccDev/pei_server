@@ -22,3 +22,11 @@ pub fn get_discipline_by_section_id(id: i32) -> impl Reply {
 pub fn get_disciplines() -> impl Reply {
     Response::new(format!("{:#?}", DB.get_disciplines()).into())
 }
+
+pub fn get_courses() -> impl Reply {
+    Response::new(format!("{:#?}", DB.get_courses()).into())
+}
+
+pub fn get_course_by_id(id: i32) -> impl Reply {
+    Response::new(format!("{:#?}", DB.get_course_by_id(id)).into())
+}
