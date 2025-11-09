@@ -6,7 +6,9 @@ edition = "2021"
 
 [dependencies]
 tokio = {version = "1", features = ["full"]}
-warp = "0.4"
+warp = {version = "0.4", features = ["server"] }
 pretty_env_logger = "0.5"
 dotenv = "0.15"
-diesel = { version = "2.2.0", features = ["postgres"] }
+diesel = { version = "2.2", features = ["postgres", "uuid", "serde_json", "chrono", "postgres_backend"] }
+chrono = {version = "0.4.41", features = ["serde"]}
+serde = { version = "1.0.0", features = ["derive"] }

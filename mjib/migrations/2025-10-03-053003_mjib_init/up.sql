@@ -1,7 +1,8 @@
 -- Your SQL goes here
-CREATE TABLE sessions (
+CREATE TABLE sections (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
-  description TEXT,
-  create_at TIMESTAMPTZ NOT NULL
+  comment TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT Now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT Now()
 )

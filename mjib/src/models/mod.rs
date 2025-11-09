@@ -1,3 +1,5 @@
-mod session;
+mod section;
+mod discipline;
 
-pub use session::*;
+pub use section::*;
+pub use discipline::*;

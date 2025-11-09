@@ -1,9 +1,10 @@
 pub mod routes;
-pub mod database;
 pub mod models;
+pub mod database;
+pub mod schema;
 
-use std::sync:Mutex;
-use crate::database::DatabaseState
+use std::sync::Mutex;
+use crate::database::DatabaseState;
 
 pub static DB: Mutex<DatabaseState> = Mutex::new(DatabaseState::new());
 
