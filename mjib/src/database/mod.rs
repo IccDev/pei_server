@@ -2,9 +2,13 @@ use diesel::{result::Error, Connection, PgConnection};
 use std::{env, sync::{Mutex, MutexGuard}};
 use crate::models::{
     Section, CreateSection, UpdateSection, Discipline, DisciplineData, 
-    UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse
+    UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse, CourseDiscipline,
+    CourseDisciplineData, CreateCourseDiscipline
 };
-use crate::schema::{self, sections::dsl::sections, disciplines::dsl::disciplines, courses::dsl::courses};
+use crate::schema::{
+    self, sections::dsl::sections, disciplines::dsl::disciplines, 
+    courses::dsl::courses,
+};
 use crate::diesel::{ExpressionMethods, RunQueryDsl, QueryDsl, associations::HasTable, JoinOnDsl, BoolExpressionMethods};
 use chrono::{Utc, DateTime, NaiveDateTime};
 
@@ -13,21 +17,25 @@ pub trait Database<'a> {
     fn access(&'a self) -> MutexGuard<'a, DatabaseState>;
     fn initiate(&'a self);
     // Section
-    fn create_section(&'a self, section: CreateSection) -> Result<i32, Error>;
-    fn update_section(&'a self, section: UpdateSection) -> Result<Section, Error>;
-    fn get_section_by_id(&'a self, id: i32) -> Result<Section, Error>;
-    fn get_sections(&'a self) -> Result<Vec<Section>, Error>;
+    fn create_section(&'a self, section: CreateSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn update_section(&'a self, section: UpdateSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Section, Error>;
+    fn get_section_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Section, Error>;
+    fn get_sections(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<Section>, Error>;
     // discipline
-    fn create_discipline(&'a self, discipline: CreateDiscipline) -> Result<i32, Error>;
-    fn update_discipline(&'a self, discipline: UpdateDiscipline) -> Result<Discipline, Error>;
-    fn get_discipline_by_id(&'a self, id: i32) -> Result<DisciplineData, Error>;
-    fn get_discipline_by_section_id(&'a self, id: i32) -> Result<Vec<DisciplineData>, Error>;
-    fn get_disciplines(&'a self) -> Result<Vec<DisciplineData>, Error>;
+    fn create_discipline(&'a self, discipline: CreateDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn update_discipline(&'a self, discipline: UpdateDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Discipline, Error>;
+    fn get_discipline_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<DisciplineData, Error>;
+    fn get_discipline_by_section_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<DisciplineData>, Error>;
+    fn get_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<DisciplineData>, Error>;
     // Course
-    fn create_course(&'a self, course: CreateCourse) -> Result<i32, Error>;
-    fn update_course(&'a self, course: UpdateCourse) -> Result<Course, Error>;
-    fn get_course_by_id(&'a self, id: i32) -> Result<Course, Error>;
-    fn get_courses(&'a self) -> Result<Vec<Course>, Error>;
+    fn create_course(&'a self, course: CreateCourse, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn update_course(&'a self, course: UpdateCourse, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Course, Error>;
+    fn get_course_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Course, Error>;
+    fn get_courses(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<Course>, Error>;
+    // Course Disciplines
+    fn create_course_disciplines(&'a self, course_discipline: CreateCourseDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn get_course_disciplines_by_course_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<CourseDisciplineData, Error>;
+    fn get_course_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<CourseDisciplineData>, Error>;
 }
 
 
@@ -54,16 +62,16 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
         db.connection =  Some(PgConnection::establish(&url).expect("Not able to connect to the database!"));
     }
     
-    fn create_section(&'a self, section: CreateSection) -> Result<i32, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn create_section(&'a self, section: CreateSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        
         diesel::insert_into(sections::table())
             .values(&section)
             .returning(schema::sections::id)
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn update_section(&'a self, section: UpdateSection) -> Result<Section, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn update_section(&'a self, section: UpdateSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Section, Error> {
+        
         let utc: DateTime<Utc> = Utc::now();
         let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
 
@@ -76,29 +84,29 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn get_section_by_id(&'a self, id: i32) -> Result<Section, Error> {
-        let mut db = self.access();
+    fn get_section_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Section, Error> {
+        
         schema::sections::dsl::sections
             .filter(schema::sections::id.eq(id))
             .first::<Section>(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn get_sections(&'a self) -> Result<Vec<Section>, Error> {
-        let mut db = self.access();
+    fn get_sections(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<Section>, Error> {
+        
         schema::sections::dsl::sections
             .load::<Section>(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn create_discipline(&'a self, discipline: CreateDiscipline) -> Result<i32, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn create_discipline(&'a self, discipline: CreateDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        
         diesel::insert_into(disciplines::table())
             .values(&discipline)
             .returning(schema::disciplines::id)
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn update_discipline(&'a self, discipline: UpdateDiscipline) -> Result<Discipline, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn update_discipline(&'a self, discipline: UpdateDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Discipline, Error> {
+        
         let utc: DateTime<Utc> = Utc::now();
         let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
 
@@ -111,9 +119,7 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             ))
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
-    fn get_discipline_by_id(&'a self, id: i32) -> Result<DisciplineData, Error> {
-        let mut db = self.access();
-
+    fn get_discipline_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<DisciplineData, Error> {
         let (disc, sect) = schema::disciplines::dsl::disciplines
         .inner_join(
             schema::sections::dsl::sections::on(schema::sections::table, schema::disciplines::section_id.eq(schema::sections::id).and(schema::disciplines::id.eq(id)))
@@ -130,8 +136,8 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             updated_at: disc.updated_at
         })
     }
-    fn get_discipline_by_section_id(&'a self, id: i32) -> Result<Vec<DisciplineData>, Error> {
-        let mut db = self.access();
+    fn get_discipline_by_section_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<DisciplineData>, Error> {
+        
         Ok(schema::disciplines::dsl::disciplines
             .inner_join(
                 schema::sections::dsl::sections::on(schema::sections::table, schema::disciplines::section_id.eq(id))
@@ -147,8 +153,8 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             }).collect::<_>())
     }
 
-    fn get_disciplines(&'a self) -> Result<Vec<DisciplineData>, Error> {
-        let mut db = self.access();
+    fn get_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<DisciplineData>, Error> {
+        
         Ok(schema::disciplines::dsl::disciplines
             .inner_join(
                 schema::sections::dsl::sections::on(schema::sections::table, schema::disciplines::section_id.eq(schema::sections::id))
@@ -164,16 +170,16 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             }).collect::<_>())
     }
 
-    fn create_course(&'a self, course: CreateCourse) -> Result<i32, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn create_course(&'a self, course: CreateCourse, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        
         diesel::insert_into(courses::table())
             .values(&course)
             .returning(schema::courses::id)
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn update_course(&'a self, course: UpdateCourse) -> Result<Course, Error> {
-        let mut db: MutexGuard<'_, DatabaseState> = self.access();
+    fn update_course(&'a self, course: UpdateCourse, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Course, Error> {
+        
         let utc: DateTime<Utc> = Utc::now();
         let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
 
@@ -189,16 +195,64 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn get_course_by_id(&'a self, id: i32) -> Result<Course, Error> {
-        let mut db = self.access();
+    fn get_course_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Course, Error> {
         schema::courses::dsl::courses
             .filter(schema::courses::id.eq(id))
             .first::<Course>(db.connection.as_mut().expect("No connection initiated!"))
     }
 
-    fn get_courses(&'a self) -> Result<Vec<Course>, Error> {
-        let mut db = self.access();
+    fn get_courses(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<Course>, Error> {
+        
         schema::courses::dsl::courses
             .load::<Course>(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn create_course_disciplines(&'a self, course_discipline: CreateCourseDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        
+        let data = course_discipline.discipline_ids.iter().map(|id| {
+            CourseDiscipline {
+                course_id: course_discipline.course_id.clone(),
+                discipline_id: id.to_owned()
+            }
+        }).collect::<Vec<CourseDiscipline>>();
+
+        let _: Vec<_> = diesel::insert_into(schema::courses_disciplines::table)
+            .values(&data)
+            .returning(schema::courses_disciplines::course_id)
+            .get_results::<i32>(db.connection.as_mut().expect("No connection initiated!"))?;
+
+        Ok(course_discipline.course_id)
+    }
+
+    fn get_course_disciplines_by_course_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<CourseDisciplineData, Error> {
+        let dis: Vec<Discipline> = schema::courses_disciplines::dsl::courses_disciplines
+            .inner_join(
+                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::course_id.eq(schema::disciplines::id).and(schema::courses_disciplines::course_id.eq(id)))
+            )
+            .select(schema::disciplines::all_columns)
+            .load::<Discipline>(db.connection.as_mut().expect("No connection initiated!"))?;
+        
+        let course = self.get_course_by_id(id, db)?;
+        Ok(CourseDisciplineData {
+            course,
+            disciplines: dis
+        })
+    }
+
+    fn get_course_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<CourseDisciplineData>, Error> {
+        let data: Vec<(i32, Discipline)> = schema::courses_disciplines::dsl::courses_disciplines
+            .inner_join(
+                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::course_id.eq(schema::disciplines::id))
+            )
+            .select((schema::courses_disciplines::course_id, schema::disciplines::all_columns))
+            .load::<(i32, Discipline)>(db.connection.as_mut().expect("No connection initiated!"))?;
+        
+        Ok(self.get_courses(db)?.iter().map(|course| {
+            let dis = data.iter().filter(|(c, _)| c == &course.id).map(|(_, d)| d.to_owned()).collect::<Vec<_>>();
+            CourseDisciplineData {
+                course: course.to_owned(),
+                disciplines: dis
+            }
+        }).collect::<Vec<_>>())
     }
 }

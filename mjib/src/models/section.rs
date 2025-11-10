@@ -1,6 +1,6 @@
 
 use chrono::NaiveDateTime;
-use serde::{Deserialize};
+use serde::Deserialize;
 
 
 #[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Clone)]

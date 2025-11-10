@@ -14,6 +14,13 @@ diesel::table! {
 }
 
 diesel::table! {
+    courses_disciplines (course_id, discipline_id) {
+        course_id -> Int4,
+        discipline_id -> Int4,
+    }
+}
+
+diesel::table! {
     disciplines (id) {
         id -> Int4,
         name -> Varchar,
@@ -34,10 +41,13 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(courses_disciplines -> courses (course_id));
+diesel::joinable!(courses_disciplines -> disciplines (discipline_id));
 diesel::joinable!(disciplines -> sections (section_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     courses,
+    courses_disciplines,
     disciplines,
     sections,
 );

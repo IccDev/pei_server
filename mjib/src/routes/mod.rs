@@ -18,6 +18,8 @@ pub fn routes_handlers() -> impl Filter<Extract = impl Reply> + Clone {
         .or(warp::path!("get" / "discipline" / "section" / i32).map(get_discipline_by_section_id))
         .or(warp::path!("get" / "course" / "all").map(get_courses))
         .or(warp::path!("get" / "course" / i32).map(get_course_by_id))
+        .or(warp::path!("get" / "course" / "disciplines").map(get_course_disciplines))
+        .or(warp::path!("get" / "course" / i32 / "disciplines").map(get_course_disciplines_by_course_id))
     .or(
     warp::post()
         .and(warp::path!("create"/ "section").and(warp::body::json()).map(create_section))
@@ -26,5 +28,6 @@ pub fn routes_handlers() -> impl Filter<Extract = impl Reply> + Clone {
         .or(warp::path!("update"/ "discipline").and(warp::body::json()).map(update_discipline))
         .or(warp::path!("create"/ "course").and(warp::body::json()).map(create_course))
         .or(warp::path!("update"/ "course").and(warp::body::json()).map(update_course))
+        .or(warp::path!("create"/ "course" / "disciplines").and(warp::body::json()).map(create_course_disciplines))
     )
 }

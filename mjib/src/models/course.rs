@@ -1,5 +1,5 @@
 use chrono::NaiveDateTime;
-use serde::{Deserialize};
+use serde::Deserialize;
 
 
 #[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Clone)]
@@ -15,7 +15,7 @@ pub struct Course {
     pub video_link: Option<String>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime
-    
+
     /*
     disciplineIds: ["1"],
      */
