@@ -1,9 +1,9 @@
 
 use chrono::NaiveDateTime;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
 
-#[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Clone)]
+#[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::sections)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 #[diesel(primary_key(id))]
@@ -17,7 +17,7 @@ pub struct Section {
 
 
 
-#[derive(Queryable, Selectable, Insertable, Debug, PartialEq, Deserialize, Clone)]
+#[derive(Queryable, Selectable, Insertable, Debug, PartialEq, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::sections)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateSection {
@@ -25,7 +25,7 @@ pub struct CreateSection {
     pub comment: Option<String>,
 }
 
-#[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Clone)]
+#[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::sections)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 #[diesel(primary_key(id))]

@@ -1,8 +1,8 @@
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use crate::models::{Course, Discipline};
 
 
-#[derive(Queryable, Selectable, Associations, Insertable, Debug, Deserialize, Clone)]
+#[derive(Queryable, Selectable, Associations, Insertable, Debug, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::courses_disciplines)]
 #[diesel(belongs_to(crate::models::Course))]
 #[diesel(belongs_to(crate::models::Discipline))]
@@ -14,13 +14,13 @@ pub struct CourseDiscipline {
 }
 
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct CreateCourseDiscipline {
     pub course_id: i32,
     pub discipline_ids: Vec<i32>
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct CourseDisciplineData {
     pub course: Course,
     pub disciplines: Vec<Discipline>

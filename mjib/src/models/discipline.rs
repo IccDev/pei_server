@@ -1,9 +1,9 @@
 use chrono::NaiveDateTime;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use crate::models::Section;
 
 
-#[derive(Queryable, AsChangeset, Selectable, Associations, Insertable, Debug, Deserialize, Clone)]
+#[derive(Queryable, AsChangeset, Selectable, Associations, Insertable, Debug, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::disciplines)]
 #[diesel(belongs_to(crate::models::Section))]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -17,7 +17,7 @@ pub struct Discipline {
     pub updated_at: NaiveDateTime
 }
 
-#[derive(Queryable, Selectable, Insertable, Debug, PartialEq, Deserialize, Clone)]
+#[derive(Queryable, Selectable, Insertable, Debug, PartialEq, Deserialize, Serialize, Clone)]
 #[diesel(table_name = crate::schema::disciplines)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateDiscipline {
@@ -26,7 +26,7 @@ pub struct CreateDiscipline {
     pub section_id: i32
 }
 
-#[derive(Debug, PartialEq, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Clone)]
 pub struct UpdateDiscipline {
     pub id: i32,
     pub name: String,
@@ -34,7 +34,7 @@ pub struct UpdateDiscipline {
     pub section_id: i32
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct DisciplineData {
     pub id: i32,
     pub name: String,
