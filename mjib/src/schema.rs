@@ -1,6 +1,15 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    age (id) {
+        id -> Int4,
+        value -> Int4,
+        created_at -> Timestamptz,
+        updated_at -> Timestamptz,
+    }
+}
+
+diesel::table! {
     courses (id) {
         id -> Int4,
         name -> Varchar,
@@ -46,6 +55,7 @@ diesel::joinable!(courses_disciplines -> disciplines (discipline_id));
 diesel::joinable!(disciplines -> sections (section_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    age,
     courses,
     courses_disciplines,
     disciplines,

@@ -1,3 +1,0 @@
-USE NS icc DB mjib;
-DEFINE TABLE age SCHEMAFULL;
-DEFINE FIELD value ON TABLE age TYPE int;

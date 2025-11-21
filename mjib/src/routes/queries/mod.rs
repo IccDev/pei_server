@@ -119,3 +119,17 @@ pub fn get_course_disciplines() -> impl Reply {
         }
     }
 }
+
+// age
+pub fn get_age() -> impl Reply {
+    let mut db = DB.access();
+    let res = DB.get_age(&mut db);
+    match res.is_ok() {
+        true => {
+            Response::new(format!("{:#?}", serde_json::json!(res.unwrap()).to_string()).into())
+        }
+        false => {
+            Response::new("".to_owned().into())
+        }
+    }
+}

@@ -3,11 +3,12 @@ use std::{env, sync::{Mutex, MutexGuard}};
 use crate::models::{
     Section, CreateSection, UpdateSection, Discipline, DisciplineData, 
     UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse, CourseDiscipline,
-    CourseDisciplineData, CreateCourseDiscipline
+    CourseDisciplineData, CreateCourseDiscipline, Age, CreateAge, UpdateAge
 };
 use crate::schema::{
     self, sections::dsl::sections, disciplines::dsl::disciplines, 
     courses::dsl::courses,
+    age::dsl::age
 };
 use crate::diesel::{ExpressionMethods, RunQueryDsl, QueryDsl, associations::HasTable, JoinOnDsl, BoolExpressionMethods};
 use chrono::{Utc, DateTime, NaiveDateTime};
@@ -36,6 +37,10 @@ pub trait Database<'a> {
     fn create_course_disciplines(&'a self, course_discipline: CreateCourseDiscipline, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
     fn get_course_disciplines_by_course_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<CourseDisciplineData, Error>;
     fn get_course_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<CourseDisciplineData>, Error>;
+    // Age
+    fn create_age(&'a self, create_age: CreateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn update_age(&'a self, update_age: UpdateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error>;
+    fn get_age(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error>;
 }
 
 
@@ -254,5 +259,33 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
                 disciplines: dis
             }
         }).collect::<Vec<_>>())
+    }
+
+    // age
+    fn create_age(&'a self, create_age: CreateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        
+        diesel::insert_into(age::table())
+            .values(&create_age)
+            .returning(schema::age::id)
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn update_age(&'a self, update_age: UpdateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error> {
+        
+        let utc: DateTime<Utc> = Utc::now();
+        let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
+
+        diesel::update(schema::age::dsl::age.filter(schema::age::id.eq(update_age.id)))
+            .set((
+                schema::age::value.eq(update_age.value),
+                schema::age::updated_at.eq(dt)
+            ))
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn get_age(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error> {
+        
+        schema::age::dsl::age
+            .first::<Age>(db.connection.as_mut().expect("No connection initiated!"))
     }
 }
