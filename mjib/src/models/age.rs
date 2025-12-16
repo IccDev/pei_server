@@ -8,7 +8,8 @@ use serde::{Serialize, Deserialize};
 #[diesel(primary_key(id))]
 pub struct Age {
     pub id: i32,
-    pub value: i32,
+    pub max: i32,
+    pub min: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime
 }
@@ -17,11 +18,13 @@ pub struct Age {
 #[diesel(table_name = crate::schema::age)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateAge {
-    pub value: i32,
+    pub max: i32,
+    pub min: i32,
 }
 
 #[derive(Debug, PartialEq, Deserialize, Serialize, Clone)]
 pub struct UpdateAge {
     pub id: i32,
-    pub value: i32,
+    pub max: i32,
+    pub min: i32,
 }

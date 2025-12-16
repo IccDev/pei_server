@@ -3,7 +3,8 @@
 diesel::table! {
     age (id) {
         id -> Int4,
-        value -> Int4,
+        max -> Int4,
+        min -> Int4,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
     }
@@ -50,6 +51,26 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    users (id) {
+        id -> Int4,
+        identifier -> Text,
+        last_name -> Varchar,
+        first_name -> Varchar,
+        email -> Text,
+        date_of_birth -> Varchar,
+        gsm -> Varchar,
+        pays -> Varchar,
+        ville -> Varchar,
+        eglise -> Varchar,
+        situation_professionnelle -> Text,
+        commenaire -> Text,
+        is_admin -> Bool,
+        is_deleted -> Bool,
+        created_at -> Timestamptz,
+    }
+}
+
 diesel::joinable!(courses_disciplines -> courses (course_id));
 diesel::joinable!(courses_disciplines -> disciplines (discipline_id));
 diesel::joinable!(disciplines -> sections (section_id));
@@ -60,4 +81,5 @@ diesel::allow_tables_to_appear_in_same_query!(
     courses_disciplines,
     disciplines,
     sections,
+    users,
 );

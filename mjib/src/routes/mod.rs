@@ -21,6 +21,8 @@ pub fn routes_handlers() -> impl Filter<Extract = impl Reply> + Clone {
         .or(warp::path!("get" / "course" / "disciplines").map(get_course_disciplines))
         .or(warp::path!("get" / "course" / i32 / "disciplines").map(get_course_disciplines_by_course_id))
         .or(warp::path!("get" / "age").map(get_age))
+        .or(warp::path!("get" / "users").map(get_users))
+        .or(warp::path!("get" / "user" / i32).map(get_user_by_id))
     .or(
     warp::post()
         .and(warp::path!("create"/ "section").and(warp::body::json()).map(create_section))
@@ -32,5 +34,9 @@ pub fn routes_handlers() -> impl Filter<Extract = impl Reply> + Clone {
         .or(warp::path!("create"/ "course" / "disciplines").and(warp::body::json()).map(create_course_disciplines))
         .or(warp::path!("create"/ "age").and(warp::body::json()).map(create_age))
         .or(warp::path!("update"/ "age").and(warp::body::json()).map(update_age))
+        .or(warp::path!("create"/ "user").and(warp::body::json()).map(create_user))
+        .or(warp::path!("create"/ "user"/"admin").and(warp::body::json()).map(create_admin_user))
+        .or(warp::path!("login").and(warp::body::json()).map(login))
+        .or(warp::path!("logout").and(warp::body::json()).map(logout))
     )
 }

@@ -1,0 +1,30 @@
+-- Your SQL goes here
+ALTER TABLE users
+DROP COLUMN age;
+
+ALTER TABLE users
+ADD date_of_birth VARCHAR DEFAULT '';
+
+ALTER TABLE users
+ADD gsm VARCHAR DEFAULT '';
+
+ALTER TABLE users
+ADD pays VARCHAR DEFAULT '';
+
+ALTER TABLE users
+ADD ville VARCHAR DEFAULT '';
+
+ALTER TABLE users
+ADD eglise VARCHAR DEFAULT '';
+
+ALTER TABLE users
+ADD situation_professionnelle TEXT DEFAULT '';
+
+ALTER TABLE users
+ADD commenaire TEXT DEFAULT '';
+
+ALTER TABLE users
+ADD is_admin BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE users
+ADD is_deleted BOOLEAN NOT NULL DEFAULT FALSE;

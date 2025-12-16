@@ -133,3 +133,29 @@ pub fn get_age() -> impl Reply {
         }
     }
 }
+
+pub fn get_user_by_id(id: i32) -> impl Reply {
+    let mut db = DB.access();
+    let res = DB.get_user_by_id(id, &mut db);
+    match res.is_ok() {
+        true => {
+            Response::new(format!("{:#?}", serde_json::json!(res.unwrap()).to_string()).into())
+        }
+        false => {
+            Response::new("".to_owned().into())
+        }
+    }
+}
+
+pub fn get_users() -> impl Reply {
+    let mut db = DB.access();
+    let res = DB.get_users(&mut db);
+    match res.is_ok() {
+        true => {
+            Response::new(format!("{:#?}", serde_json::json!(res.unwrap()).to_string()).into())
+        }
+        false => {
+            Response::new("".to_owned().into())
+        }
+    }
+}

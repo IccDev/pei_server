@@ -1,0 +1,9 @@
+-- Your SQL goes here
+ALTER TABLE age
+DROP COLUMN value;
+
+ALTER TABLE age
+ADD max INTEGER NOT NULL;
+
+ALTER TABLE age
+ADD min INTEGER NOT NULL;

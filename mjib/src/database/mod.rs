@@ -3,12 +3,11 @@ use std::{env, sync::{Mutex, MutexGuard}};
 use crate::models::{
     Section, CreateSection, UpdateSection, Discipline, DisciplineData, 
     UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse, CourseDiscipline,
-    CourseDisciplineData, CreateCourseDiscipline, Age, CreateAge, UpdateAge
+    CourseDisciplineData, CreateCourseDiscipline, Age, CreateAge, UpdateAge, User, CreateUser
 };
 use crate::schema::{
     self, sections::dsl::sections, disciplines::dsl::disciplines, 
-    courses::dsl::courses,
-    age::dsl::age
+    courses::dsl::courses, age::dsl::age,  users::dsl::users
 };
 use crate::diesel::{ExpressionMethods, RunQueryDsl, QueryDsl, associations::HasTable, JoinOnDsl, BoolExpressionMethods};
 use chrono::{Utc, DateTime, NaiveDateTime};
@@ -41,6 +40,10 @@ pub trait Database<'a> {
     fn create_age(&'a self, create_age: CreateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
     fn update_age(&'a self, update_age: UpdateAge, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error>;
     fn get_age(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Age, Error>;
+    // User
+    fn create_user(&'a self, create_user: CreateUser, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn get_user_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<User, Error>;
+    fn get_users(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<User>, Error>;
 }
 
 
@@ -63,7 +66,7 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
 
     fn initiate(&'a self) {
         let mut db = self.access();
-        let url: String = env::var("MJIB_DATABASE_URL").expect("not able to load db_url from .env");//.map_or("postgres://iccdev:iccmjib2025@192.168.60.23:5433/mjib_dev".to_string(), |url| url);
+        let url: String = env::var("MJIB_DATABASE_URL").expect("not able to load db_url from .env");
         db.connection =  Some(PgConnection::establish(&url).expect("Not able to connect to the database!"));
     }
     
@@ -207,7 +210,6 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
     }
 
     fn get_courses(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<Course>, Error> {
-        
         schema::courses::dsl::courses
             .load::<Course>(db.connection.as_mut().expect("No connection initiated!"))
     }
@@ -277,7 +279,8 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
 
         diesel::update(schema::age::dsl::age.filter(schema::age::id.eq(update_age.id)))
             .set((
-                schema::age::value.eq(update_age.value),
+                schema::age::max.eq(update_age.max),
+                schema::age::min.eq(update_age.min),
                 schema::age::updated_at.eq(dt)
             ))
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
@@ -287,5 +290,23 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
         
         schema::age::dsl::age
             .first::<Age>(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn create_user(&'a self, create_user: CreateUser, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        diesel::insert_into(users::table())
+            .values(&create_user)
+            .returning(schema::users::id)
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn get_user_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<User, Error> {
+        schema::users::dsl::users
+            .filter(schema::users::id.eq(id))
+            .first::<User>(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn get_users(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<User>, Error> {
+        schema::users::dsl::users
+            .load::<User>(db.connection.as_mut().expect("No connection initiated!"))
     }
 }

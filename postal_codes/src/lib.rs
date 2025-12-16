@@ -2,7 +2,6 @@ pub mod routes;
 pub mod models;
 pub mod database;
 pub mod schema;
-pub mod auth_client;
 
 use std::sync::Mutex;
 use crate::database::DatabaseState;

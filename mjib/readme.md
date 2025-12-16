@@ -1,5 +1,10 @@
 # Diesel  
 [diesel](https://diesel.rs/guides/getting-started)
+# step one: setup diesel in your project (this will create the database)
+```
+echo DATABASE_URL=postgres://username:password@localhost/diesel_demo > .env  
+diesel setup  
+```
 ## Generate diesel migration
 ``diesel migration generate migration_name``  
 ## Apply our new migration

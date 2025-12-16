@@ -1,1 +1,3 @@
+
+
 diesel migration run --database-url=postgres://iccdev:iccmjib2025@84.234.16.224:5434/mjib_dev
