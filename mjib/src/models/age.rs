@@ -8,10 +8,10 @@ use serde::{Serialize, Deserialize};
 #[diesel(primary_key(id))]
 pub struct Age {
     pub id: i32,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
     pub max: i32,
     pub min: i32,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime
 }
 
 #[derive(Queryable, Selectable, Insertable, Debug, PartialEq, Deserialize, Serialize, Clone)]

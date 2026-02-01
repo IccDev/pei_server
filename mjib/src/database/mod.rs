@@ -3,11 +3,12 @@ use std::{env, sync::{Mutex, MutexGuard}};
 use crate::models::{
     Section, CreateSection, UpdateSection, Discipline, DisciplineData, 
     UpdateDiscipline, CreateDiscipline, Course, CreateCourse, UpdateCourse, CourseDiscipline,
-    CourseDisciplineData, CreateCourseDiscipline, Age, CreateAge, UpdateAge, User, CreateUser
+    CourseDisciplineData, CreateCourseDiscipline, Age, AcademicYear, CreateAcademicYear, UpdateAcademicYear, CreateAge,
+    UpdateAge, User, CreateUser, UserSectionData, UserSection, CreateUserSection
 };
 use crate::schema::{
     self, sections::dsl::sections, disciplines::dsl::disciplines, 
-    courses::dsl::courses, age::dsl::age,  users::dsl::users
+    courses::dsl::courses, age::dsl::age, academic_year::dsl::academic_year,  users::dsl::users
 };
 use crate::diesel::{ExpressionMethods, RunQueryDsl, QueryDsl, associations::HasTable, JoinOnDsl, BoolExpressionMethods};
 use chrono::{Utc, DateTime, NaiveDateTime};
@@ -44,6 +45,16 @@ pub trait Database<'a> {
     fn create_user(&'a self, create_user: CreateUser, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
     fn get_user_by_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<User, Error>;
     fn get_users(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<User>, Error>;
+
+    // User Section
+    fn create_user_section(&'a self, user_section: CreateUserSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn get_user_sections_by_user_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<UserSectionData, Error>;
+    //fn get_user_sections(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<UserSectionData>, Error>;
+
+    // Academic Year
+    fn create_academic_year(&'a self, create_academic_year: CreateAcademicYear, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error>;
+    fn update_academic_year(&'a self, update_academic_year: UpdateAcademicYear, db: &mut MutexGuard<'_, DatabaseState>) -> Result<AcademicYear, Error>;
+    fn get_academic_years(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<AcademicYear>, Error>;
 }
 
 
@@ -234,7 +245,7 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
     fn get_course_disciplines_by_course_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<CourseDisciplineData, Error> {
         let dis: Vec<Discipline> = schema::courses_disciplines::dsl::courses_disciplines
             .inner_join(
-                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::course_id.eq(schema::disciplines::id).and(schema::courses_disciplines::course_id.eq(id)))
+                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::discipline_id.eq(schema::disciplines::id).and(schema::courses_disciplines::course_id.eq(id)))
             )
             .select(schema::disciplines::all_columns)
             .load::<Discipline>(db.connection.as_mut().expect("No connection initiated!"))?;
@@ -249,7 +260,7 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
     fn get_course_disciplines(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<CourseDisciplineData>, Error> {
         let data: Vec<(i32, Discipline)> = schema::courses_disciplines::dsl::courses_disciplines
             .inner_join(
-                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::course_id.eq(schema::disciplines::id))
+                schema::disciplines::dsl::disciplines::on(schema::disciplines::table, schema::courses_disciplines::discipline_id.eq(schema::disciplines::id))
             )
             .select((schema::courses_disciplines::course_id, schema::disciplines::all_columns))
             .load::<(i32, Discipline)>(db.connection.as_mut().expect("No connection initiated!"))?;
@@ -279,9 +290,9 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
 
         diesel::update(schema::age::dsl::age.filter(schema::age::id.eq(update_age.id)))
             .set((
+                schema::age::updated_at.eq(dt),
                 schema::age::max.eq(update_age.max),
-                schema::age::min.eq(update_age.min),
-                schema::age::updated_at.eq(dt)
+                schema::age::min.eq(update_age.min)
             ))
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
     }
@@ -308,5 +319,64 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
     fn get_users(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<User>, Error> {
         schema::users::dsl::users
             .load::<User>(db.connection.as_mut().expect("No connection initiated!"))
+    }
+    
+    fn create_user_section(&'a self, user_section: CreateUserSection, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        let data = user_section.section_id.iter().map(|id| {
+            UserSection {
+                user_id: user_section.user_id.clone(),
+                section_id: id.to_owned()
+            }
+        }).collect::<Vec<UserSection>>();
+
+        let _: Vec<_> = diesel::insert_into(schema::users_sections::table)
+            .values(&data)
+            .returning(schema::users_sections::user_id)
+            .get_results::<i32>(db.connection.as_mut().expect("No connection initiated!"))?;
+
+        Ok(user_section.user_id)
+    }
+
+    fn get_user_sections_by_user_id(&'a self, id: i32, db: &mut MutexGuard<'_, DatabaseState>) -> Result<UserSectionData, Error> {
+        let dis: Vec<Section> = schema::users_sections::dsl::users_sections
+            .inner_join(
+                schema::sections::dsl::sections::on(schema::sections::table, schema::users_sections::section_id.eq(schema::sections::id).and(schema::users_sections::user_id.eq(id)))
+            )
+            .select(schema::sections::all_columns)
+            .load::<Section>(db.connection.as_mut().expect("No connection initiated!"))?;
+        
+        let user = self.get_user_by_id(id, db)?;
+        Ok(UserSectionData {
+            user,
+            sections: dis
+        })
+    }
+    
+    fn create_academic_year(&'a self, create_academic_year: CreateAcademicYear, db: &mut MutexGuard<'_, DatabaseState>) -> Result<i32, Error> {
+        diesel::insert_into(academic_year::table())
+            .values(&create_academic_year)
+            .returning(schema::academic_year::id)
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+
+    fn update_academic_year(&'a self, update_academic_year: UpdateAcademicYear, db: &mut MutexGuard<'_, DatabaseState>) -> Result<AcademicYear, Error> {
+
+        let utc: DateTime<Utc> = Utc::now();
+        let dt: NaiveDateTime = NaiveDateTime::new(utc.date_naive(), utc.time());
+
+        diesel::update(schema::academic_year::dsl::academic_year.filter(schema::academic_year::id.eq(update_academic_year.id)))
+            .set((
+                schema::academic_year::updated_at.eq(dt),
+                schema::academic_year::name.eq(update_academic_year.name),
+                schema::academic_year::comment.eq(update_academic_year.comment),
+                schema::academic_year::start_date.eq(update_academic_year.start_date),
+                schema::academic_year::end_date.eq(update_academic_year.end_date)
+            ))
+            .get_result(db.connection.as_mut().expect("No connection initiated!"))
+    }
+    
+    fn get_academic_years(&'a self, db: &mut MutexGuard<'_, DatabaseState>) -> Result<Vec<AcademicYear>, Error> {
+        schema::academic_year::dsl::academic_year
+            .load::<AcademicYear>(db.connection.as_mut().expect("No connection initiated!"))
     }
 }
