@@ -3,15 +3,15 @@
 CREATE TABLE academic_year (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
-  comment TEXT,
+  comment TEXT NOT NULL,
   start_date TIMESTAMPTZ NOT NULL DEFAULT Now(),
   end_date TIMESTAMPTZ NOT NULL DEFAULT Now(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT Now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT Now()
 );
 
-INSERT INTO academic_year (name, start_date, end_date)
-    VALUES ('Default Academic Year', Now(), Now());
+INSERT INTO academic_year (name, start_date, comment, end_date)
+    VALUES ('Default Academic Year', '', Now(), Now());
 
 ALTER TABLE sections
 ADD academic_year_id INTEGER;

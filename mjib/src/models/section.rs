@@ -10,7 +10,7 @@ use serde::{Serialize, Deserialize};
 pub struct Section {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
     pub academic_year_id: i32
@@ -23,7 +23,7 @@ pub struct Section {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateSection {
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub academic_year_id: i32
 }
 
@@ -34,6 +34,6 @@ pub struct CreateSection {
 pub struct UpdateSection {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub academic_year_id: i32
 }

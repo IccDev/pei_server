@@ -162,7 +162,7 @@ pub fn create_user(create_user: CreateUserIn) -> impl Reply {
                 ville: create_user.ville,
                 eglise: create_user.eglise,
                 situation_professionnelle: create_user.situation_professionnelle,
-                commenaire: create_user.commenaire,
+                commentaire: create_user.commentaire,
                 is_admin: create_user.is_admin,
                 is_deleted: false
             };
@@ -203,7 +203,7 @@ pub fn create_admin_user(create_user: CreateUserIn) -> impl Reply {
         ville: create_user.ville,
         eglise: create_user.eglise,
         situation_professionnelle: create_user.situation_professionnelle,
-        commenaire: create_user.commenaire,
+        commentaire: create_user.commentaire,
         is_admin: create_user.is_admin,
         is_deleted: false
     };

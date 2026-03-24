@@ -3,25 +3,25 @@ ALTER TABLE users
 DROP COLUMN age;
 
 ALTER TABLE users
-ADD date_of_birth VARCHAR DEFAULT '';
+ADD date_of_birth VARCHAR NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD gsm VARCHAR DEFAULT '';
+ADD gsm VARCHAR  NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD pays VARCHAR DEFAULT '';
+ADD pays VARCHAR  NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD ville VARCHAR DEFAULT '';
+ADD ville VARCHAR  NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD eglise VARCHAR DEFAULT '';
+ADD eglise VARCHAR  NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD situation_professionnelle TEXT DEFAULT '';
+ADD situation_professionnelle TEXT NOT NULL DEFAULT '';
 
 ALTER TABLE users
-ADD commenaire TEXT DEFAULT '';
+ADD commentaire TEXT  NOT NULL DEFAULT '';
 
 ALTER TABLE users
 ADD is_admin BOOLEAN NOT NULL DEFAULT FALSE;

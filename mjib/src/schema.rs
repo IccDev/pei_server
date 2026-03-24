@@ -4,7 +4,7 @@ diesel::table! {
     academic_year (id) {
         id -> Int4,
         name -> Varchar,
-        comment -> Nullable<Text>,
+        comment -> Text,
         start_date -> Timestamptz,
         end_date -> Timestamptz,
         created_at -> Timestamptz,
@@ -26,10 +26,9 @@ diesel::table! {
     courses (id) {
         id -> Int4,
         name -> Varchar,
-        comment -> Nullable<Text>,
+        comment -> Text,
         start_date -> Timestamptz,
         end_date -> Timestamptz,
-        video_link -> Nullable<Text>,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
     }
@@ -46,7 +45,7 @@ diesel::table! {
     disciplines (id) {
         id -> Int4,
         name -> Varchar,
-        comment -> Nullable<Text>,
+        comment -> Text,
         section_id -> Int4,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
@@ -57,7 +56,7 @@ diesel::table! {
     sections (id) {
         id -> Int4,
         name -> Varchar,
-        comment -> Nullable<Text>,
+        comment -> Text,
         created_at -> Timestamptz,
         updated_at -> Timestamptz,
         academic_year_id -> Int4,
@@ -77,7 +76,7 @@ diesel::table! {
         ville -> Varchar,
         eglise -> Varchar,
         situation_professionnelle -> Text,
-        commenaire -> Text,
+        commentaire -> Text,
         is_admin -> Bool,
         is_deleted -> Bool,
         created_at -> Timestamptz,

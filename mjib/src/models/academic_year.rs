@@ -9,7 +9,7 @@ use serde::{Serialize, Deserialize};
 pub struct AcademicYear {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub start_date: NaiveDateTime,
     pub end_date: NaiveDateTime,
     pub created_at: NaiveDateTime,
@@ -21,7 +21,7 @@ pub struct AcademicYear {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateAcademicYear {
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub start_date: NaiveDateTime,
     pub end_date: NaiveDateTime
 }
@@ -30,7 +30,7 @@ pub struct CreateAcademicYear {
 pub struct UpdateAcademicYear {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub start_date: NaiveDateTime,
     pub end_date: NaiveDateTime
 }

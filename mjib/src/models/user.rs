@@ -1,6 +1,5 @@
 use chrono::NaiveDateTime;
 use serde::{Serialize, Deserialize};
-use crate::models::Section;
 
 
 #[derive(Queryable, AsChangeset, Selectable, Insertable, Debug, Deserialize, Serialize, Clone)]
@@ -19,12 +18,33 @@ pub struct User {
     pub ville: String,
     pub eglise: String,
     pub situation_professionnelle: String,
-    pub commenaire: String,
+    pub commentaire: String,
     pub is_admin: bool,
     pub is_deleted: bool,
     pub created_at: NaiveDateTime
 }
 
+
+/*
+CREATE TABLE public.users (
+	id serial4 NOT NULL,
+	identifier text NOT NULL,
+	last_name varchar NOT NULL,
+	first_name varchar NOT NULL,
+	email text NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	date_of_birth varchar DEFAULT ''::character varying NOT NULL,
+	gsm varchar DEFAULT ''::character varying NOT NULL,
+	pays varchar DEFAULT ''::character varying NOT NULL,
+	ville varchar DEFAULT ''::character varying NOT NULL,
+	eglise varchar DEFAULT ''::character varying NOT NULL,
+	situation_professionnelle text DEFAULT ''::text NOT NULL,
+	commentaire text DEFAULT ''::text NOT NULL,
+	is_admin bool DEFAULT false NOT NULL,
+	is_deleted bool DEFAULT false NOT NULL,
+	CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+*/
 
 #[derive(Debug, PartialEq, Deserialize, Serialize, Clone)]
 pub struct CreateUserIn {
@@ -38,7 +58,7 @@ pub struct CreateUserIn {
     pub ville: String,
     pub eglise: String,
     pub situation_professionnelle: String,
-    pub commenaire: String,
+    pub commentaire: String,
     pub is_admin: bool
 }
 
@@ -56,7 +76,7 @@ pub struct CreateUser {
     pub ville: String,
     pub eglise: String,
     pub situation_professionnelle: String,
-    pub commenaire: String,
+    pub commentaire: String,
     pub is_admin: bool,
     pub is_deleted: bool
 }
@@ -87,5 +107,5 @@ pub struct Account {
     pub identifier_id: String,
     pub repository_id: i32,
     pub deactivated: bool,
-    pub password: Option<String>
+    pub password: String
 }

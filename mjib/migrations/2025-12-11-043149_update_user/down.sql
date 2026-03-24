@@ -18,7 +18,7 @@ ALTER TABLE users
 DROP COLUMN situation_professionnelle;
 
 ALTER TABLE users
-DROP COLUMN commenaire;
+DROP COLUMN commentaire;
 
 ALTER TABLE users
 DROP COLUMN is_admin;

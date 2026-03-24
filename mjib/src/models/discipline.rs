@@ -11,7 +11,7 @@ use crate::models::Section;
 pub struct Discipline {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub section_id: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime
@@ -22,7 +22,7 @@ pub struct Discipline {
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CreateDiscipline {
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub section_id: i32
 }
 
@@ -30,7 +30,7 @@ pub struct CreateDiscipline {
 pub struct UpdateDiscipline {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub section_id: i32
 }
 
@@ -38,7 +38,7 @@ pub struct UpdateDiscipline {
 pub struct DisciplineData {
     pub id: i32,
     pub name: String,
-    pub comment: Option<String>,
+    pub comment: String,
     pub section: Section,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime

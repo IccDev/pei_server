@@ -207,8 +207,7 @@ impl<'a> Database<'a>  for Mutex<DatabaseState> {
                 schema::courses::name.eq(course.name), 
                 schema::courses::comment.eq(course.comment), 
                 schema::courses::start_date.eq(course.start_date), 
-                schema::courses::end_date.eq(course.end_date), 
-                schema::courses::video_link.eq(course.video_link), 
+                schema::courses::end_date.eq(course.end_date),
                 schema::courses::updated_at.eq(dt)
             ))
             .get_result(db.connection.as_mut().expect("No connection initiated!"))
